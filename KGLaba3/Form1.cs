@@ -28,9 +28,9 @@ namespace KGLaba3
         private void PictureBox2_Paint(object sender, PaintEventArgs e)
         {
             Graphics graphics = e.Graphics;
-            for (int i = 0; i < pixelOutLineReference.Count(); i++)
+            for (int i = 0; i < pixelOutLineB.Count(); i++)
             {
-                graphics.FillRectangle(new SolidBrush(pixelOutLineReference[i].color), pixelOutLineReference[i].x, pixelOutLineReference[i].y, 1, 1);
+                graphics.FillRectangle(new SolidBrush(pixelOutLineB[i].color), pixelOutLineB[i].x, pixelOutLineB[i].y, 1, 1);
             }
         }
 
