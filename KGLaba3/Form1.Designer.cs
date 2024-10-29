@@ -36,29 +36,32 @@
             // 
             // pictureBox1
             // 
-            pictureBox1.Location = new Point(12, 12);
+            pictureBox1.Location = new Point(14, 16);
+            pictureBox1.Margin = new Padding(3, 4, 3, 4);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(376, 385);
+            pictureBox1.Size = new Size(405, 505);
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
             pictureBox1.Paint += PictureBox1_Paint;
             // 
             // pictureBox2
             // 
-            pictureBox2.Location = new Point(446, 12);
+            pictureBox2.Location = new Point(510, 16);
+            pictureBox2.Margin = new Padding(3, 4, 3, 4);
             pictureBox2.Name = "pictureBox2";
-            pictureBox2.Size = new Size(376, 385);
+            pictureBox2.Size = new Size(430, 513);
             pictureBox2.TabIndex = 1;
             pictureBox2.TabStop = false;
             pictureBox2.Paint += PictureBox2_Paint;
             // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(851, 488);
+            ClientSize = new Size(973, 651);
             Controls.Add(pictureBox2);
             Controls.Add(pictureBox1);
+            Margin = new Padding(3, 4, 3, 4);
             Name = "Form1";
             Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
