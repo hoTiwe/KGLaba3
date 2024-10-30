@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace KGLaba3
 {
@@ -15,173 +16,23 @@ namespace KGLaba3
         double timeMain = 0;
         int countDiffA = 0;
         int countDiffB = 0;
-        int scaleA = 20, scaleB = 20, scaleReference = 20;
+        int scaleA = 10, scaleB = 10, scaleReference = 10;
         double m1 = 0;
         double m2 = 0;
 
-        int offsetXA = 5, offsetYA = 5, offsetXB = 5, offsetYB = 5;
+        int offsetXA = 20, offsetYA = 10, offsetXB = 20, offsetYB = 15;
         public Form1()
         {
             InitializeComponent();
-            getPixelsReference();
-            getPixelsA();
-            getPixelsB();
+           
         }
 
-        void getPixelsA()
+        void paintPixels(Graphics graphics, List<Pixel> pixels, int offsetX, int offsetY, int scale)
         {
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-
-            this.PaintLineMain(-4, 1, -2, 1, Color.Green);
-            this.PaintLineMain(-2, 1, -3, 6, Color.Green);
-            this.PaintLineMain(-4, 1, -3, 6, Color.Green);
-
-
-            this.PaintLineMain(-2.5, 0, -2.5, 1.5, Color.Orange);
-            this.PaintLineMain(-2.5, 1.5, 0.5, 1.5, Color.Orange);
-            this.PaintLineMain(0.5, 1.5, 0.5, 0, Color.Orange);
-            this.PaintLineMain(0.5, 0, -2.5, 0, Color.Orange);
-
-            this.PaintLineMain(0, 2.5, -0.5, 3, Color.LightYellow);
-            this.PaintLineMain(-0.5, 3, -1, 3, Color.LightYellow);
-            this.PaintLineMain(-1, 3, -1.5, 2.5, Color.LightYellow);
-            this.PaintLineMain(-1.5, 2.5, -1.5, 2, Color.LightYellow);
-            this.PaintLineMain(-1.5, 2, -1, 1.5, Color.LightYellow);
-            this.PaintLineMain(-1, 1.5, -0.5, 1.5, Color.LightYellow);
-            this.PaintLineMain(-0.5, 1.5, -4, 1, Color.LightYellow);
-
-            this.PaintLineMain(-2.5, 1.5, -1, 2.5, Color.Red);
-            this.PaintLineMain(-1, 2.5, 0.5, 1.5, Color.Red);
-            this.PaintLineMain(0.5, 1.5, -2.5, 1.5, Color.Red);
-
-            this.PaintLineMain(-1.5, 0.5, -1.5, 1, Color.Yellow);
-            this.PaintLineMain(-1.5, 1, -1, 1, Color.Yellow);
-            this.PaintLineMain(-1, 1, -1, 0.5, Color.Yellow);
-            this.PaintLineMain(-1, 0.5, -1.5, 0.5, Color.Yellow);
-
-            this.PaintLineMain(-0.5, 0, -0.5, 1, Color.SaddleBrown);
-            this.PaintLineMain(-0.5, 1, 0, 1, Color.SaddleBrown);
-            this.PaintLineMain(0, 1, 0, 0, Color.SaddleBrown);
-            this.PaintLineMain(0, 0, -0.5, 0, Color.SaddleBrown);
-
-            this.PaintLineMain(-3, 0, -3, 4, Color.Black);
-
-            this.PaintLineMain(-3, -1.5, -2.5, -2, Color.Black);
-            this.PaintLineMain(-3, -1.5, -3.5, -2, Color.Black);
-
-            this.PaintLineMain(-3, -2, -2.5, 2.5, Color.Black);
-            this.PaintLineMain(-3, -2, -3.5, 2.5, Color.Black);
-
-            stopwatch.Stop();
-            TimeSpan elapsedTime = stopwatch.Elapsed;
-            timeA = elapsedTime.TotalMilliseconds;
-
-            List<Pixel> diff = CalculateDiff(pixelOutLineA, new List<Pixel>(), pixelOutLineReference, new List<Pixel>());
-            countDiffA = diff.Count();
-            Console.WriteLine("Diff A: " + diff.Count() + " Time A: " + timeA + "Count total: " + pixelOutLineA.Count());
-
-        }
-
-        void getPixelsB()
-        {
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-
-            this.PaintLineCDA(-4, 1, -2, 1, Color.Green);
-            this.PaintLineCDA(-2, 1, -3, 6, Color.Green);
-            this.PaintLineCDA(-4, 1, -3, 6, Color.Green);
-
-            this.PaintLineCDA(-2.5, 0, -2.5, 1.5, Color.Orange);
-            this.PaintLineCDA(-2.5, 1.5, 0.5, 1.5, Color.Orange);
-            this.PaintLineCDA(0.5, 1.5, 0.5, 0, Color.Orange);
-            this.PaintLineCDA(0.5, 0, -2.5, 0, Color.Orange);
-
-            this.PaintLineCDA(0, 2.5, -0.5, 3, Color.LightYellow);
-            this.PaintLineCDA(-0.5, 3, -1, 3, Color.LightYellow);
-            this.PaintLineCDA(-1, 3, -1.5, 2.5, Color.LightYellow);
-            this.PaintLineCDA(-1.5, 2.5, -1.5, 2, Color.LightYellow);
-            this.PaintLineCDA(-1.5, 2, -1, 1.5, Color.LightYellow);
-            this.PaintLineCDA(-1, 1.5, -0.5, 1.5, Color.LightYellow);
-            this.PaintLineCDA(-0.5, 1.5, -4, 1, Color.LightYellow);
-
-            this.PaintLineCDA(-2.5, 1.5, -1, 2.5, Color.Red);
-            this.PaintLineCDA(-1, 2.5, 0.5, 1.5, Color.Red);
-            this.PaintLineCDA(0.5, 1.5, -2.5, 1.5, Color.Red);
-
-            this.PaintLineCDA(-1.5, 0.5, -1.5, 1, Color.Yellow);
-            this.PaintLineCDA(-1.5, 1, -1, 1, Color.Yellow);
-            this.PaintLineCDA(-1, 1, -1, 0.5, Color.Yellow);
-            this.PaintLineCDA(-1, 0.5, -1.5, 0.5, Color.Yellow);
-
-            this.PaintLineCDA(-0.5, 0, -0.5, 1, Color.SaddleBrown);
-            this.PaintLineCDA(-0.5, 1, 0, 1, Color.SaddleBrown);
-            this.PaintLineCDA(0, 1, 0, 0, Color.SaddleBrown);
-            this.PaintLineCDA(0, 0, -0.5, 0, Color.SaddleBrown);
-
-            this.PaintLineCDA(-3, 0, -3, 4, Color.Black);
-
-            this.PaintLineCDA(-3, -1.5, -2.5, -2, Color.Black);
-            this.PaintLineCDA(-3, -1.5, -3.5, -2, Color.Black);
-
-            this.PaintLineCDA(-3, -2, -2.5, 2.5, Color.Black);
-            this.PaintLineCDA(-3, -2, -3.5, 2.5, Color.Black);
-
-            stopwatch.Stop();
-            TimeSpan elapsedTime = stopwatch.Elapsed;
-            timeB = elapsedTime.TotalMilliseconds;
-            List<Pixel> diff = CalculateDiff(pixelOutLineB, new List<Pixel>(), pixelOutLineReference, new List<Pixel>());
-            Console.WriteLine("Diff B: " + diff.Count() + " Time B: " + timeB + "Count total: " + pixelOutLineB.Count());
-        }
-
-        void getPixelsReference()
-        {
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-
-            this.PaintLineBrezenthema(-4, 1, -2, 1, Color.Green);
-            this.PaintLineBrezenthema(-2, 1, -3, 6, Color.Green);
-            this.PaintLineBrezenthema(-4, 1, -3, 6, Color.Green);
-            /*
-            this.PaintLineBrezenthema(-2.5, 0, -2.5, 1.5, Color.Orange);
-            this.PaintLineBrezenthema(-2.5, 1.5, 0.5, 1.5, Color.Orange);
-            this.PaintLineBrezenthema(0.5, 1.5, 0.5, 0, Color.Orange);
-            this.PaintLineBrezenthema(0.5, 0, -2.5, 0, Color.Orange);
-
-            this.PaintLineBrezenthema(0, 2.5, -0.5, 3, Color.LightYellow);
-            this.PaintLineBrezenthema(-0.5, 3, -1, 3, Color.LightYellow);
-            this.PaintLineBrezenthema(-1, 3, -1.5, 2.5, Color.LightYellow);
-            this.PaintLineBrezenthema(-1.5, 2.5, -1.5, 2, Color.LightYellow);
-            this.PaintLineBrezenthema(-1.5, 2, -1, 1.5, Color.LightYellow);
-            this.PaintLineBrezenthema(-1, 1.5, -0.5, 1.5, Color.LightYellow);
-            this.PaintLineBrezenthema(-0.5, 1.5, -4, 1, Color.LightYellow);
-
-            this.PaintLineBrezenthema(-2.5, 1.5, -1, 2.5, Color.Red);
-            this.PaintLineBrezenthema(-1, 2.5, 0.5, 1.5, Color.Red);
-            this.PaintLineBrezenthema(0.5, 1.5, -2.5, 1.5, Color.Red);
-            this.PaintLineBrezenthema(-1.5, 0.5, -1.5, 1, Color.Yellow);
-            this.PaintLineBrezenthema(-1.5, 1, -1, 1, Color.Yellow);
-            this.PaintLineBrezenthema(-1, 1, -1, 0.5, Color.Yellow);
-            this.PaintLineBrezenthema(-1, 0.5, -1.5, 0.5, Color.Yellow);
-
-            this.PaintLineBrezenthema(-0.5, 0, -0.5, 1, Color.SaddleBrown);
-            this.PaintLineBrezenthema(-0.5, 1, 0, 1, Color.SaddleBrown);
-            this.PaintLineBrezenthema(0, 1, 0, 0, Color.SaddleBrown);
-            this.PaintLineBrezenthema(0, 0, -0.5, 0, Color.SaddleBrown);
-
-            this.PaintLineBrezenthema(-3, 0, -3, 4, Color.Black);
-
-            this.PaintLineBrezenthema(-3, -1.5, -2.5, -2, Color.Black);
-            this.PaintLineBrezenthema(-3, -1.5, -3.5, -2, Color.Black);
-
-            this.PaintLineBrezenthema(-3, -2, -2.5, 2.5, Color.Black);
-            this.PaintLineBrezenthema(-3, -2, -3.5, 2.5, Color.Black);*/
-
-            stopwatch.Stop();
-            TimeSpan elapsedTime = stopwatch.Elapsed;
-            timeMain = elapsedTime.TotalMilliseconds;
-            Console.WriteLine(" Time Reference: " + timeMain + " Count total: " + pixelOutLineReference.Count());
-
+            for (int i = 0; i < pixels.Count(); i++)
+            {
+                graphics.FillRectangle(new SolidBrush(pixels[i].color), (pixels[i].x + offsetX) * scale, 400 - (pixels[i].y + offsetY) * scale, 1 * scale, 1 * scale);
+            }
         }
 
         List<Pixel> CalculateDiff(List<Pixel> outlineT, List<Pixel> onsideT, List<Pixel> outlineM, List<Pixel> onsideM)
@@ -213,37 +64,252 @@ namespace KGLaba3
         private void PictureBox1_Paint(object sender, PaintEventArgs e)
         {
             Graphics graphics = e.Graphics;
-            for (int i = 0; i < pixelOutLineA.Count(); i++)
-            {
-                graphics.FillRectangle(new SolidBrush(pixelOutLineA[i].color), (pixelOutLineA[i].x + offsetXA * scaleA), (pixelOutLineA[i].y + offsetYA * scaleA), 1 * scaleA, 1 * scaleA);
-            }
+
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            this.PaintLineMain(-4, 1, -2, 1, Color.Green);
+            this.PaintLineMain(-2, 1, -3, 6, Color.Green);
+            this.PaintLineMain(-4, 1, -3, 6, Color.Green);
+            paintPixels(graphics, pixelOutLineA, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, FillA(pixelOutLineA, new Pixel(-3 * 4, 2 * 4, Color.Green)), offsetXA, offsetYA, scaleA);
+            pixelOutLineA.Clear();
+
+            
+            this.PaintLineMain(-2.5, 0, -2.5, 1.5, Color.Orange);
+            this.PaintLineMain(-2.5, 1.5, 0.5, 1.5, Color.Orange);
+            this.PaintLineMain(0.5, 1.5, 0.5, 0, Color.Orange);
+            this.PaintLineMain(0.5, 0, -2.5, 0, Color.Orange);
+            paintPixels(graphics, pixelOutLineA, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, FillA(pixelOutLineA, new Pixel(-1 * 4, 1 * 4, Color.Orange)), offsetXA, offsetYA, scaleA);
+            pixelOutLineA.Clear();
+            
+
+            this.PaintLineMain(0, 2.5, -0.5, 3, Color.LightGoldenrodYellow);
+            this.PaintLineMain(-0.5, 3, -1, 3, Color.LightGoldenrodYellow);
+            this.PaintLineMain(-1, 3, -1.5, 2.5, Color.LightGoldenrodYellow);
+            this.PaintLineMain(-1.5, 2.5, -1.5, 2, Color.LightGoldenrodYellow);
+            this.PaintLineMain(-1.5, 2, -1, 1.5, Color.LightGoldenrodYellow);
+            this.PaintLineMain(-1, 1.5, -0.5, 1.5, Color.LightGoldenrodYellow);
+            this.PaintLineMain(-0.5, 1.5, 0, 2.5, Color.LightGoldenrodYellow);
+            paintPixels(graphics, pixelOutLineA, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, FillA(pixelOutLineA, new Pixel(-1 * 4, 2 * 4, Color.LightGoldenrodYellow)), offsetXA, offsetYA, scaleA);
+            pixelOutLineA.Clear();
+            
+            this.PaintLineMain(-2.5, 1.5, -1, 2.5, Color.Red);
+            this.PaintLineMain(-1, 2.5, 0.5, 1.5, Color.Red);
+            this.PaintLineMain(0.5, 1.5, -2.5, 1.5, Color.Red);
+            paintPixels(graphics, pixelOutLineA, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, FillA(pixelOutLineA, new Pixel(-1 * 4, 2 * 4, Color.Red)), offsetXA, offsetYA, scaleA);
+            pixelOutLineA.Clear();
+            
+            this.PaintLineMain(-1.5, 0.5, -1.5, 1, Color.Yellow);
+            this.PaintLineMain(-1.5, 1, -1, 1, Color.Yellow);
+            this.PaintLineMain(-1, 1, -1, 0.5, Color.Yellow);
+            this.PaintLineMain(-1, 0.5, -1.5, 0.5, Color.Yellow);
+            paintPixels(graphics, pixelOutLineA, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, FillA(pixelOutLineA, new Pixel(-5, 3, Color.Yellow)), offsetXA, offsetYA, scaleA);
+            pixelOutLineA.Clear();
+            
+            this.PaintLineMain(-0.5, 0, -0.5, 1, Color.SaddleBrown);
+            this.PaintLineMain(-0.5, 1, 0, 1, Color.SaddleBrown);
+            this.PaintLineMain(0, 1, 0, 0, Color.SaddleBrown);
+            this.PaintLineMain(0, 0, -0.5, 0, Color.SaddleBrown);
+            paintPixels(graphics, pixelOutLineA, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, FillA(pixelOutLineA, new Pixel(-1, 2, Color.SaddleBrown)), offsetXA, offsetYA, scaleA);
+            pixelOutLineA.Clear();
+            
+            this.PaintLineMain(-3, 0, -3, 4, Color.Black);
+            paintPixels(graphics, pixelOutLineA, offsetXA, offsetYA, scaleA);
+            pixelOutLineA.Clear();
+
+            this.PaintLineMain(-3, 1.5, -2.5, 2, Color.Black);
+            this.PaintLineMain(-3, 1.5, -3.5, 2, Color.Black);
+            paintPixels(graphics, pixelOutLineA, offsetXA, offsetYA, scaleA);
+            pixelOutLineA.Clear();
+
+            this.PaintLineMain(-3, 2, -2.5, 2.5, Color.Black);
+            this.PaintLineMain(-3, 2, -3.5, 2.5, Color.Black);
+            pixelOutLineA.Clear();
+
+            stopwatch.Stop();
+            TimeSpan elapsedTime = stopwatch.Elapsed;
+            timeA = elapsedTime.TotalMilliseconds;
+
+            List<Pixel> diff = CalculateDiff(pixelOutLineA, new List<Pixel>(), pixelOutLineReference, new List<Pixel>());
+            countDiffA = diff.Count();
+                       
         }
 
         private void PictureBox2_Paint(object sender, PaintEventArgs e)
         {
             Graphics graphics = e.Graphics;
-            for (int i = 0; i < pixelOutLineB.Count(); i++)
-            {
-                graphics.FillRectangle(new SolidBrush(pixelOutLineB[i].color), (pixelOutLineB[i].x + offsetXB * scaleB), (pixelOutLineB[i].y + offsetYB * scaleB), 1 * scaleB, 1 * scaleB);
-            }
+
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            this.PaintLineCDA(-4, 1, -2, 1, Color.Green);
+            this.PaintLineCDA(-2, 1, -3, 6, Color.Green);
+            this.PaintLineCDA(-4, 1, -3, 6, Color.Green);
+            paintPixels(graphics, pixelOutLineB, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics,
+                 FillB(pixelOutLineB, new Pixel(-3 * 4, 2 * 4, Color.Green))
+                , offsetXA, offsetYA, scaleA);
+            pixelOutLineB.Clear();
+
+            this.PaintLineCDA(-2.5, 0, -2.5, 1.5, Color.Orange);
+            this.PaintLineCDA(-2.5, 1.5, 0.5, 1.5, Color.Orange);
+            this.PaintLineCDA(0.5, 1.5, 0.5, 0, Color.Orange);
+            this.PaintLineCDA(0.5, 0, -2.5, 0, Color.Orange);
+            paintPixels(graphics, pixelOutLineB, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, FillB(pixelOutLineB, new Pixel(-1 * 4, 1 * 4, Color.Orange)), offsetXA, offsetYA, scaleA);
+            pixelOutLineB.Clear();
+
+
+            this.PaintLineCDA(0, 2.5, -0.5, 3, Color.LightGoldenrodYellow);
+            this.PaintLineCDA(-0.5, 3, -1, 3, Color.LightGoldenrodYellow);
+            this.PaintLineCDA(-1, 3, -1.5, 2.5, Color.LightGoldenrodYellow);
+            this.PaintLineCDA(-1.5, 2.5, -1.5, 2, Color.LightGoldenrodYellow);
+            this.PaintLineCDA(-1.5, 2, -1, 1.5, Color.LightGoldenrodYellow);
+            this.PaintLineCDA(-1, 1.5, -0.5, 1.5, Color.LightGoldenrodYellow);
+            this.PaintLineCDA(-0.5, 1.5, 0, 2.5, Color.LightGoldenrodYellow);
+            paintPixels(graphics, pixelOutLineB, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, FillB(pixelOutLineB, new Pixel(-1 * 4, 2 * 4, Color.LightGoldenrodYellow)), offsetXA, offsetYA, scaleA);
+            pixelOutLineB.Clear();
+
+            this.PaintLineCDA(-2.5, 1.5, -1, 2.5, Color.Red);
+            this.PaintLineCDA(-1, 2.5, 0.5, 1.5, Color.Red);
+            this.PaintLineCDA(0.5, 1.5, -2.5, 1.5, Color.Red);
+            paintPixels(graphics, pixelOutLineB, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, FillB(pixelOutLineB, new Pixel(-1 * 4, 2 * 4, Color.Red)), offsetXA, offsetYA, scaleA);
+            pixelOutLineB.Clear();
+
+            this.PaintLineCDA(-1.5, 0.5, -1.5, 1, Color.Yellow);
+            this.PaintLineCDA(-1.5, 1, -1, 1, Color.Yellow);
+            this.PaintLineCDA(-1, 1, -1, 0.5, Color.Yellow);
+            this.PaintLineCDA(-1, 0.5, -1.5, 0.5, Color.Yellow);
+            paintPixels(graphics, pixelOutLineB, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, FillB(pixelOutLineB, new Pixel(-5, 3, Color.Yellow)), offsetXA, offsetYA, scaleA);
+            pixelOutLineB.Clear();
+
+            this.PaintLineCDA(-0.5, 0, -0.5, 1, Color.SaddleBrown);
+            this.PaintLineCDA(-0.5, 1, 0, 1, Color.SaddleBrown);
+            this.PaintLineCDA(0, 1, 0, 0, Color.SaddleBrown);
+            this.PaintLineCDA(0, 0, -0.5, 0, Color.SaddleBrown);
+            paintPixels(graphics, pixelOutLineB, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, FillB(pixelOutLineB, new Pixel(-1, 2, Color.SaddleBrown)), offsetXA, offsetYA, scaleA);
+            pixelOutLineB.Clear();
+
+            this.PaintLineCDA(-3, 0, -3, 4, Color.Black);
+            paintPixels(graphics, pixelOutLineB, offsetXA, offsetYA, scaleA);
+            pixelOutLineB.Clear();
+
+            this.PaintLineCDA(-3, 1.5, -2.5, 2, Color.Black);
+            this.PaintLineCDA(-3, 1.5, -3.5, 2, Color.Black);
+            paintPixels(graphics, pixelOutLineB, offsetXA, offsetYA, scaleA);
+            pixelOutLineB.Clear();
+
+            this.PaintLineCDA(-3, 2, -2.5, 2.5, Color.Black);
+            this.PaintLineCDA(-3, 2, -3.5, 2.5, Color.Black);
+            pixelOutLineB.Clear();
+            
+            stopwatch.Stop();
+            TimeSpan elapsedTime = stopwatch.Elapsed;
+
+            //List<Pixel> diff = CalculateDiff(pixelOutLineA, new List<Pixel>(), pixelOutLineReference, new List<Pixel>());
+            //countDiffA = diff.Count();
+            timeB = elapsedTime.TotalMilliseconds;
+            List<Pixel> diff = CalculateDiff(pixelOutLineB, new List<Pixel>(), pixelOutLineReference, new List<Pixel>());
+            Console.WriteLine("Diff B: " + diff.Count() + " Time B: " + timeB + "Count total: " + pixelOutLineB.Count());
         }
 
         private void PictureBox3_Paint(object sender, PaintEventArgs e)
         {
+            
             Graphics graphics = e.Graphics;
-            for (int i = 0; i < pixelOutLineReference.Count(); i++)
-            {
-                graphics.FillRectangle(new SolidBrush(pixelOutLineReference[i].color), (pixelOutLineReference[i].x + offsetXB * scaleB), (pixelOutLineReference[i].y + offsetYB * scaleB), 1, 1);
-            }
+
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            /*
+
+            this.PaintLineBrezenthema(-4, 1, -2, 1, Color.Green);
+            this.PaintLineBrezenthema(-2, 1, -3, 6, Color.Green);
+            this.PaintLineBrezenthema(-4, 1, -3, 6, Color.Green);
+            paintPixels(graphics, pixelOutLineReference, offsetXA, offsetYA, scaleA);
+            
+            paintPixels(graphics, FillB(pixelOutLineReference, new Pixel(-3 * 4, 2 * 4, Color.Green)), offsetXA, offsetYA, scaleA);
+            pixelOutLineReference.Clear();
+            
+            this.PaintLineBrezenthema(-2.5, 0, -2.5, 1.5, Color.Orange);
+            this.PaintLineBrezenthema(-2.5, 1.5, 0.5, 1.5, Color.Orange);
+            this.PaintLineBrezenthema(0.5, 1.5, 0.5, 0, Color.Orange);
+            this.PaintLineBrezenthema(0.5, 0, -2.5, 0, Color.Orange);
+            paintPixels(graphics, pixelOutLineReference, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, FillC(pixelOutLineReference, new Pixel(-1 * 4, 1 * 4, Color.Orange)), offsetXA, offsetYA, scaleA);
+            pixelOutLineReference.Clear();
+
+            this.PaintLineBrezenthema(0, 2.5, -0.5, 3, Color.LightGoldenrodYellow);
+            this.PaintLineBrezenthema(-0.5, 3, -1, 3, Color.LightGoldenrodYellow);
+            this.PaintLineBrezenthema(-1, 3, -1.5, 2.5, Color.LightGoldenrodYellow);
+            this.PaintLineBrezenthema(-1.5, 2.5, -1.5, 2, Color.LightGoldenrodYellow);
+            this.PaintLineBrezenthema(-1.5, 2, -1, 1.5, Color.LightGoldenrodYellow);
+            this.PaintLineBrezenthema(-1, 1.5, -0.5, 1.5, Color.LightGoldenrodYellow);
+            this.PaintLineBrezenthema(-0.5, 1.5, 0, 2.5, Color.LightGoldenrodYellow);
+            paintPixels(graphics, pixelOutLineReference, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, FillC(pixelOutLineReference, new Pixel(-1 * 4, 2 * 4, Color.LightGoldenrodYellow)), offsetXA, offsetYA, scaleA);
+            pixelOutLineReference.Clear();*/
+
+            this.PaintLineBrezenthema(-2.5, 1.5, -1, 2.5, Color.Red);
+            this.PaintLineBrezenthema(-1, 2.5, 0.5, 1.5, Color.Red);
+            this.PaintLineBrezenthema(0.5, 1.5, -2.5, 1.5, Color.Red);
+            paintPixels(graphics, pixelOutLineReference, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, FillC(pixelOutLineReference, new Pixel(-1 * 4, 9, Color.Red)), offsetXA, offsetYA, scaleA);
+            pixelOutLineReference.Clear();
+            /*
+
+            this.PaintLineBrezenthema(-1.5, 0.5, -1.5, 1, Color.Yellow);
+            this.PaintLineBrezenthema(-1.5, 1, -1, 1, Color.Yellow);
+            this.PaintLineBrezenthema(-1, 1, -1, 0.5, Color.Yellow);
+            this.PaintLineBrezenthema(-1, 0.5, -1.5, 0.5, Color.Yellow);
+            paintPixels(graphics, pixelOutLineReference, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, FillC(pixelOutLineReference, new Pixel(-5, 3, Color.Yellow)), offsetXA, offsetYA, scaleA);
+            pixelOutLineReference.Clear();
+
+            this.PaintLineBrezenthema(-0.5, 0, -0.5, 1, Color.SaddleBrown);
+            this.PaintLineBrezenthema(-0.5, 1, 0, 1, Color.SaddleBrown);
+            this.PaintLineBrezenthema(0, 1, 0, 0, Color.SaddleBrown);
+            this.PaintLineBrezenthema(0, 0, -0.5, 0, Color.SaddleBrown);
+            paintPixels(graphics, pixelOutLineReference, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, FillC(pixelOutLineReference, new Pixel(-1, 2, Color.SaddleBrown)), offsetXA, offsetYA, scaleA);
+            pixelOutLineReference.Clear();
+
+            this.PaintLineBrezenthema(-3, 0, -3, 4, Color.Black);
+            paintPixels(graphics, pixelOutLineReference, offsetXA, offsetYA, scaleA);
+            pixelOutLineReference.Clear();
+
+            this.PaintLineBrezenthema(-3, 1.5, -2.5, 2, Color.Black);
+            this.PaintLineBrezenthema(-3, 1.5, -3.5, 2, Color.Black);
+            paintPixels(graphics, pixelOutLineReference, offsetXA, offsetYA, scaleA);
+            pixelOutLineReference.Clear();
+
+            this.PaintLineBrezenthema(-3, 2, -2.5, 2.5, Color.Black);
+            this.PaintLineBrezenthema(-3, 2, -3.5, 2.5, Color.Black);
+            pixelOutLineReference.Clear();
+            */
+            stopwatch.Stop();
+            TimeSpan elapsedTime = stopwatch.Elapsed;
+
+            timeMain = elapsedTime.TotalMilliseconds;
+            Console.WriteLine(" Time Reference: " + timeMain + " Count total: " + pixelOutLineReference.Count());
         }
 
 
         void PaintLineMain(double x1, double y1, double x2, double y2, Color color)
         {
-            x1 *= scaleA;
-            x2 *= scaleA;
-            y1 *= scaleA;
-            y2 *= scaleA;
+            x1 *= 4;
+            x2 *= 4;
+            y1 *= 4;
+            y2 *= 4;
             double dx = x2 - x1;
             double dy = y2 - y1;
 
@@ -279,10 +345,10 @@ namespace KGLaba3
 
         void PaintLineCDA(double x1, double y1, double x2, double y2, Color color)
         {
-            x1 *= scaleB;
-            x2 *= scaleB;
-            y1 *= scaleB;
-            y2 *= scaleB;
+            x1 *= 4;
+            x2 *= 4;
+            y1 *= 4;
+            y2 *= 4;
             double length = Math.Max(Math.Abs(x2 - x1), Math.Abs(y2 - y1));
             double dx = (x2 - x1) / length;
             double dy = (y2 - y1) / length;
@@ -301,50 +367,172 @@ namespace KGLaba3
 
         void PaintLineBrezenthema(double x1, double y1, double x2, double y2, Color color)
         {
-            x1 *= scaleReference;
-            x2 *= scaleReference;
-            y1 *= scaleReference;
-            y2 *= scaleReference;
-            if (x1 > x2)
+            // Приведение координат к целым после умножения на 2
+            int xStart = (int)(x1 * 4);
+            int yStart = (int)(y1 * 4);
+            int xEnd = (int)(x2 * 4);
+            int yEnd = (int)(y2 * 4);
+
+            int dx = Math.Abs(xEnd - xStart);
+            int dy = Math.Abs(yEnd - yStart);
+
+            int sx = xStart < xEnd ? 1 : -1;
+            int sy = yStart < yEnd ? 1 : -1;
+
+            int err = dx - dy;
+
+            while (true)
             {
-                double temp = x1;
-                x1 = x2;
-                x2 = temp;
+                pixelOutLineReference.Add(new Pixel(xStart, yStart, color));
 
-                temp = y1;
-                y1 = y2;
-                y2 = temp;
-            }
+                if (xStart == xEnd && yStart == yEnd) break;
 
+                int e2 = 2 * err;
 
-            double dx, dy, p, x, y;
-            dx = x2 - x1;
-            dy = y2 - y1;
-            x = x1;
-            y = y1;
-            p = 2 * dy - dx;
-            while (x < x2)
-            {
-                if (p >= 0)
+                if (e2 > -dy)
                 {
-                    pixelOutLineReference.Add(new Pixel((int)x, (int)y, color));
-                    y = y - 1;
-                    p = p + 2 * dy - 2 * dx;
+                    err -= dy;
+                    xStart += sx;
                 }
-                else
-                {
-                    pixelOutLineReference.Add(new Pixel((int)x, (int)y, color));
-                    p = p + 2 * dy;
-                }
-                x = x + 1;
-            }
 
+                if (e2 < dx)
+                {
+                    err += dx;
+                    yStart += sy;
+                }
+            }
         }
 
-    }
 
+
+        public List<Pixel> FillA(List<Pixel> conture, Pixel seedPixel)
+        {
+
+            Stack<Pixel> stack = new Stack<Pixel>();
+            stack.Push(seedPixel);
+
+            List<Pixel> insidePixels = new List<Pixel>();
+            Color color = seedPixel.color;
+
+            while (stack.Count > 0)
+            {
+                Pixel pixel = stack.Pop();
+                int x = pixel.x;
+                int y = pixel.y;
+
+                // Пропуск пикселя, если он уже закрашен или является частью контура
+                if (conture.Contains(pixel) || insidePixels.Contains(pixel))
+                    continue;
+
+                // Ищем левую границу интервала
+                int left = x;
+                while (conture.FindIndex((item) => item == new Pixel(left, y, color)) == -1 && insidePixels.FindIndex((item) => item == new Pixel(left, y, color)) == -1)
+                {
+                    left--;
+                }
+                left++;
+
+                // Ищем правую границу интервала
+                int right = x;
+                while (conture.FindIndex((item) => item == new Pixel(right, y, color)) == -1 && insidePixels.FindIndex((item) => item == new Pixel(right, y, color)) == -1)
+                {
+                    right++;
+                }
+                right--;
+
+                // Добавляем пиксели интервала в список закрашиваемых
+                for (int i = left; i <= right; i++)
+                {
+                    Pixel nPixel = new Pixel(i, y, color);
+                    insidePixels.Add(nPixel);
+                }
+
+                // Проверяем верхний и нижний ряды для интервалов
+                for (int i = left; i <= right; i++)
+                {
+                    // Верхний ряд
+                    if (conture.FindIndex((item) => item == new Pixel(i, y - 1, color)) == -1 && insidePixels.FindIndex((item) => item == new Pixel(i, y - 1, color)) == -1)
+                    {
+                        stack.Push(new Pixel(i, y - 1, color));
+                    }
+
+                    // Нижний ряд
+                    if (conture.FindIndex((item) => item == new Pixel(i, y + 1, color)) == -1 && insidePixels.FindIndex((item) => item == new Pixel(i, y + 1, color)) == -1)
+                    {
+                        stack.Push(new Pixel(i, y + 1, color));
+                    }
+                }
+            }
+
+            return insidePixels; // Возвращаем множество точек, которые необходимо закрасить
+        }
+
+
+        public List<Pixel> FillB(List<Pixel> conture, Pixel seedPixel)
+        {
+            var stack = new Stack<Pixel>();
+            var filledPixels = new List<Pixel>();
+            var targetColor = seedPixel.color;
+            var directions = new List<(int, int)> { (1, 0), (0, 1), (-1, 0), (0, -1) };
+
+            stack.Push(seedPixel);
+
+            while (stack.Count > 0)
+            {
+                var currentPixel = stack.Pop();
+
+                if (filledPixels.Contains(currentPixel)) continue;
+                filledPixels.Add(currentPixel);
+
+                foreach (var (dx, dy) in directions)
+                {
+                    int newX = currentPixel.x + dx;
+                    int newY = currentPixel.y + dy;
+                    Pixel pixel = new Pixel(newX, newY, targetColor);
+
+                    if (conture.FindIndex((item) => item == pixel) == -1 && filledPixels.FindIndex((item) => item == pixel) == -1)
+                    {
+                        stack.Push(pixel);
+                    }
+                }
+            }
+
+            return filledPixels;
+        }
+
+        public List<Pixel> FillC(List<Pixel> conture, Pixel seedPixel)
+        {
+            var stack = new Stack<Pixel>();
+            var filledPixels = new List<Pixel>();
+            var targetColor = seedPixel.color;
+            var directions = new List<(int, int)> { (1, 0), (0, 1), (-1, 0), (0, -1), (1, 1), (1, -1), (-1, 1), (-1, -1)};
+            stack.Push(seedPixel);
+
+            while (stack.Count > 0)
+            {
+                var currentPixel = stack.Pop();
+
+                if (filledPixels.Contains(currentPixel)) continue;
+                filledPixels.Add(currentPixel);
+
+                foreach (var (dx, dy) in directions)
+                {
+                    int newX = currentPixel.x + dx;
+                    int newY = currentPixel.y + dy;
+                    Pixel pixel = new Pixel(newX, newY, targetColor);
+
+                    if (conture.FindIndex((item) => item == pixel) == -1 && filledPixels.FindIndex((item) => item == pixel) == -1)
+                    {
+                        stack.Push(pixel);
+                    }
+                }
+            }
+
+            return filledPixels;
+        }
+    }
     public class Pixel
-    {
+        {
         public int x, y;
         public Color color;
 

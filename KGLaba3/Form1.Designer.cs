@@ -38,27 +38,33 @@
             // 
             // pictureBox1
             // 
+            pictureBox1.BackColor = SystemColors.HighlightText;
+            pictureBox1.BorderStyle = BorderStyle.FixedSingle;
             pictureBox1.Location = new Point(12, 12);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(376, 385);
+            pictureBox1.Size = new Size(400, 400);
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
             pictureBox1.Paint += PictureBox1_Paint;
             // 
             // pictureBox2
             // 
+            pictureBox2.BackColor = SystemColors.HighlightText;
+            pictureBox2.BorderStyle = BorderStyle.FixedSingle;
             pictureBox2.Location = new Point(446, 12);
             pictureBox2.Name = "pictureBox2";
-            pictureBox2.Size = new Size(376, 385);
+            pictureBox2.Size = new Size(400, 400);
             pictureBox2.TabIndex = 1;
             pictureBox2.TabStop = false;
             pictureBox2.Paint += PictureBox2_Paint;
             // 
             // pictureBox3
             // 
+            pictureBox3.BackColor = SystemColors.HighlightText;
+            pictureBox3.BorderStyle = BorderStyle.FixedSingle;
             pictureBox3.Location = new Point(884, 12);
             pictureBox3.Name = "pictureBox3";
-            pictureBox3.Size = new Size(376, 385);
+            pictureBox3.Size = new Size(400, 400);
             pictureBox3.TabIndex = 2;
             pictureBox3.TabStop = false;
             pictureBox3.Paint += PictureBox3_Paint;
@@ -67,7 +73,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1342, 488);
+            ClientSize = new Size(1316, 601);
             Controls.Add(pictureBox3);
             Controls.Add(pictureBox2);
             Controls.Add(pictureBox1);
