@@ -230,14 +230,16 @@ namespace KGLaba3
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
-            /*
+            
 
             this.PaintLineBrezenthema(-4, 1, -2, 1, Color.Green);
             this.PaintLineBrezenthema(-2, 1, -3, 6, Color.Green);
             this.PaintLineBrezenthema(-4, 1, -3, 6, Color.Green);
+
             paintPixels(graphics, pixelOutLineReference, offsetXA, offsetYA, scaleA);
             
-            paintPixels(graphics, FillB(pixelOutLineReference, new Pixel(-3 * 4, 2 * 4, Color.Green)), offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, FillArea(pixelOutLineReference, new Pixel(-3 * 4, 2 * 4, Color.Green)), offsetXA, offsetYA, scaleA);
+            /*
             pixelOutLineReference.Clear();
             
             this.PaintLineBrezenthema(-2.5, 0, -2.5, 1.5, Color.Orange);
@@ -257,7 +259,7 @@ namespace KGLaba3
             this.PaintLineBrezenthema(-0.5, 1.5, 0, 2.5, Color.LightGoldenrodYellow);
             paintPixels(graphics, pixelOutLineReference, offsetXA, offsetYA, scaleA);
             paintPixels(graphics, FillC(pixelOutLineReference, new Pixel(-1 * 4, 2 * 4, Color.LightGoldenrodYellow)), offsetXA, offsetYA, scaleA);
-            pixelOutLineReference.Clear();*/
+            pixelOutLineReference.Clear();
 
             this.PaintLineBrezenthema(-2.5, 1.5, -1, 2.5, Color.Red);
             this.PaintLineBrezenthema(-1, 2.5, 0.5, 1.5, Color.Red);
@@ -265,7 +267,7 @@ namespace KGLaba3
             paintPixels(graphics, pixelOutLineReference, offsetXA, offsetYA, scaleA);
             paintPixels(graphics, FillC(pixelOutLineReference, new Pixel(-1 * 4, 9, Color.Red)), offsetXA, offsetYA, scaleA);
             pixelOutLineReference.Clear();
-            /*
+            
 
             this.PaintLineBrezenthema(-1.5, 0.5, -1.5, 1, Color.Yellow);
             this.PaintLineBrezenthema(-1.5, 1, -1, 1, Color.Yellow);
@@ -313,8 +315,8 @@ namespace KGLaba3
             double dx = x2 - x1;
             double dy = y2 - y1;
 
-            double absDx = Math.Abs(dx);
-            double absDy = Math.Abs(dy);
+            int absDx = (int)Math.Abs(dx);
+            int absDy = (int)Math.Abs(dy);
 
             int signX = dx > 0 ? 1 : (dx < 0 ? -1 : 0);
             int signY = dy > 0 ? 1 : (dy < 0 ? -1 : 0);
@@ -401,6 +403,7 @@ namespace KGLaba3
                     yStart += sy;
                 }
             }
+            
         }
 
 
@@ -426,7 +429,7 @@ namespace KGLaba3
 
                 // Ищем левую границу интервала
                 int left = x;
-                while (conture.FindIndex((item) => item == new Pixel(left, y, color)) == -1 && insidePixels.FindIndex((item) => item == new Pixel(left, y, color)) == -1)
+                while (!conture.Contains(new Pixel(left, y, color)) && !insidePixels.Contains(new Pixel(left, y, color)))
                 {
                     left--;
                 }
@@ -434,7 +437,7 @@ namespace KGLaba3
 
                 // Ищем правую границу интервала
                 int right = x;
-                while (conture.FindIndex((item) => item == new Pixel(right, y, color)) == -1 && insidePixels.FindIndex((item) => item == new Pixel(right, y, color)) == -1)
+                while (!conture.Contains(new Pixel(right, y, color)) && !insidePixels.Contains(new Pixel(right, y, color)))
                 {
                     right++;
                 }
@@ -451,13 +454,13 @@ namespace KGLaba3
                 for (int i = left; i <= right; i++)
                 {
                     // Верхний ряд
-                    if (conture.FindIndex((item) => item == new Pixel(i, y - 1, color)) == -1 && insidePixels.FindIndex((item) => item == new Pixel(i, y - 1, color)) == -1)
+                    if (!conture.Contains(new Pixel(i, y - 1, color))  && !insidePixels.Contains(new Pixel(i, y - 1, color)))
                     {
                         stack.Push(new Pixel(i, y - 1, color));
                     }
 
                     // Нижний ряд
-                    if (conture.FindIndex((item) => item == new Pixel(i, y + 1, color)) == -1 && insidePixels.FindIndex((item) => item == new Pixel(i, y + 1, color)) == -1)
+                    if (!conture.Contains(new Pixel(i, y + 1, color))  && !insidePixels.Contains(new Pixel(i, y + 1, color)))
                     {
                         stack.Push(new Pixel(i, y + 1, color));
                     }
@@ -490,7 +493,7 @@ namespace KGLaba3
                     int newY = currentPixel.y + dy;
                     Pixel pixel = new Pixel(newX, newY, targetColor);
 
-                    if (conture.FindIndex((item) => item == pixel) == -1 && filledPixels.FindIndex((item) => item == pixel) == -1)
+                    if (!conture.Contains(pixel) && !filledPixels.Contains(pixel))
                     {
                         stack.Push(pixel);
                     }
@@ -500,12 +503,19 @@ namespace KGLaba3
             return filledPixels;
         }
 
-        public List<Pixel> FillC(List<Pixel> conture, Pixel seedPixel)
+        public static List<Pixel> FillArea(List<Pixel> pixels, Pixel seedPixel)
         {
             var stack = new Stack<Pixel>();
-            var filledPixels = new List<Pixel>();
+            var filledPixels = new HashSet<Pixel>();
             var targetColor = seedPixel.color;
-            var directions = new List<(int, int)> { (1, 0), (0, 1), (-1, 0), (0, -1), (1, 1), (1, -1), (-1, 1), (-1, -1)};
+
+            // Восьмисвязные направления
+            var directions = new List<(int, int)>
+        {
+            (1, 0), (0, 1), (-1, 0), (0, -1),
+            (1, 1), (-1, 1), (-1, -1), (1, -1)
+        };
+
             stack.Push(seedPixel);
 
             while (stack.Count > 0)
@@ -513,24 +523,31 @@ namespace KGLaba3
                 var currentPixel = stack.Pop();
 
                 if (filledPixels.Contains(currentPixel)) continue;
+
                 filledPixels.Add(currentPixel);
+                currentPixel.color = targetColor;
 
                 foreach (var (dx, dy) in directions)
                 {
                     int newX = currentPixel.x + dx;
                     int newY = currentPixel.y + dy;
-                    Pixel pixel = new Pixel(newX, newY, targetColor);
 
-                    if (conture.FindIndex((item) => item == pixel) == -1 && filledPixels.FindIndex((item) => item == pixel) == -1)
+                    var adjacentPixel = pixels.FirstOrDefault(p => p.x == newX && p.y == newY);
+
+                    if (adjacentPixel != null &&
+                        adjacentPixel.color != targetColor &&
+                        !filledPixels.Contains(adjacentPixel))
                     {
-                        stack.Push(pixel);
+                        stack.Push(adjacentPixel);
                     }
                 }
             }
 
-            return filledPixels;
+            return filledPixels.ToList();
         }
     }
+
+
     public class Pixel
         {
         public int x, y;
@@ -542,15 +559,19 @@ namespace KGLaba3
             this.y = y;
             this.color = color;
         }
-
-        public static bool operator ==(Pixel left, Pixel right)
+        public override bool Equals(object obj)
         {
-            return left.x == right.x && left.y == right.y;
+            if (obj is Pixel pixel)
+            {
+                return x == pixel.x && y == pixel.y && color == pixel.color;
+            }
+            return false;
         }
 
-        public static bool operator !=(Pixel left, Pixel right)
+        public override int GetHashCode()
         {
-            return left.x != right.x || left.y != right.y;
+            return HashCode.Combine(x, y);
         }
+
     }
 }
