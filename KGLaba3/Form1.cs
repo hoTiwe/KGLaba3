@@ -17,18 +17,18 @@ namespace KGLaba3
         double timeMain = 0;
         int countDiffA = 0;
         int countDiffB = 0;
-        int scaleA = 10, scaleB = 10, scaleReference = 10;
+        int scale = 10;
         double m1 = 0;
         double m2 = 0;
 
-        int offsetXA = 20, offsetYA = 10, offsetXB = 20, offsetYB = 15;
+        int offsetX = 20, offsetY = 10;
         public Form1()
         {
             InitializeComponent();
 
         }
 
-        void paintPixels(Graphics graphics, List<Pixel> pixels, int offsetX, int offsetY, int scale)
+        void paintPixels(Graphics graphics, List<Pixel> pixels)
         {
             for (int i = 0; i < pixels.Count(); i++)
             {
@@ -36,30 +36,20 @@ namespace KGLaba3
             }
         }
 
-        List<Pixel> CalculateDiff(List<Pixel> outlineT, List<Pixel> onsideT, List<Pixel> outlineM, List<Pixel> onsideM)
+        List<Pixel> CalculateDiff(Bitmap picture1, Bitmap picture2)
         {
-            List<Pixel> mergedList1 = outlineT.Concat(onsideT).ToList();
-            List<Pixel> mergedList2 = outlineM.Concat(onsideM).ToList();
-
-            List<Pixel> ans = new List<Pixel>();
-            for (int i = 0; i < mergedList1.Count(); i++)
+            List<Pixel> pixels = new List<Pixel>();
+            for (int i = 0; i < 400; i++)
             {
-                int index = mergedList2.FindIndex(0, mergedList2.Count(), (item) => item == mergedList1[i]);
-                if (index == -1)
+                for (int j = 0; j < 400; j++)
                 {
-                    ans.Add(mergedList1[i]);
+                    if (picture1.GetPixel(i, j) != picture2.GetPixel(i, j))
+                    {
+                        pixels.Add(new Pixel(i, j, picture1.GetPixel(i, j)));
+                    }
                 }
             }
-
-            for (int i = 0; i < mergedList2.Count(); i++)
-            {
-                int index = mergedList1.FindIndex(0, mergedList1.Count(), (item) => item == mergedList2[i]);
-                if (index == -1)
-                {
-                    ans.Add(mergedList2[i]);
-                }
-            }
-            return ans;
+            return pixels;
         }
 
         private void PictureBox1_Paint(object sender, PaintEventArgs e)
@@ -75,7 +65,7 @@ namespace KGLaba3
                 new Pixel(-12, 24, Color.Green),
                 },
                 new Pixel(-3 * 4, 2 * 4, Color.Green));
-            paintPixels(graphics, figure1, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, figure1);
 
             var figure2 = GetPixelsA(new List<Pixel> {
                 new Pixel(-10, 0, Color.Orange),
@@ -84,7 +74,7 @@ namespace KGLaba3
                 new Pixel(2, 0, Color.Orange),
                 },
                 new Pixel(-4, 4, Color.Orange));
-            paintPixels(graphics, figure2, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, figure2);
 
             var figure3 = GetPixelsA(new List<Pixel> {
                 new Pixel(0, 10, Color.LightGoldenrodYellow),
@@ -96,7 +86,7 @@ namespace KGLaba3
                 new Pixel(-2, 6, Color.LightGoldenrodYellow),
                 },
                 new Pixel(-4, 8, Color.LightGoldenrodYellow));
-            paintPixels(graphics, figure3, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, figure3);
 
             var figure4 = GetPixelsA(new List<Pixel> {
                 new Pixel(-10, 6, Color.Red),
@@ -104,7 +94,7 @@ namespace KGLaba3
                 new Pixel(2, 6, Color.Red),
                 },
                 new Pixel(-4, 8, Color.Red));
-            paintPixels(graphics, figure4, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, figure4);
 
             var figure5 = GetPixelsA(new List<Pixel> {
                 new Pixel(-6, 2, Color.Yellow),
@@ -113,7 +103,7 @@ namespace KGLaba3
                 new Pixel(-4, 2, Color.Yellow),
                 },
                 new Pixel(-5, 3, Color.Yellow));
-            paintPixels(graphics, figure5, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, figure5);
 
             var figure6 = GetPixelsA(new List<Pixel> {
                 new Pixel(-2, 0, Color.SaddleBrown),
@@ -122,22 +112,29 @@ namespace KGLaba3
                 new Pixel(0, 0, Color.SaddleBrown),
                 },
                 new Pixel(-1, 2, Color.SaddleBrown));
-            paintPixels(graphics, figure6, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, figure6);
 
             var line1 = PaintLineMain(-12, 0, -12, 16, Color.Black);
-            paintPixels(graphics, line1, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, line1);
 
             var line2 = PaintLineMain(-12, 6, -10, 8, Color.Black);
             line2.AddRange(
                 PaintLineMain(-12, 6, -14, 8, Color.Black)
             );
-            paintPixels(graphics, line2, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, line2);
 
             var line3 = PaintLineMain(-12, 8, -10, 10, Color.Black);
             line3.AddRange(
                 PaintLineMain(-12, 8, -14, 10, Color.Black)
             );
-            paintPixels(graphics, line3, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, line3);
+
+
+            stopwatch.Stop();
+            TimeSpan elapsedTime = stopwatch.Elapsed;
+
+            timeA = elapsedTime.TotalMilliseconds;
+            Console.WriteLine("Time A: " + timeA);
 
         }
 
@@ -153,7 +150,7 @@ namespace KGLaba3
                 new Pixel(-12, 24, Color.Green),
                 },
                 new Pixel(-3 * 4, 2 * 4, Color.Green));
-            paintPixels(graphics, figure1, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, figure1);
 
             var figure2 = GetPixelsB(new List<Pixel> {
                 new Pixel(-10, 0, Color.Orange),
@@ -162,7 +159,7 @@ namespace KGLaba3
                 new Pixel(2, 0, Color.Orange),
                 },
                 new Pixel(-4, 4, Color.Orange));
-            paintPixels(graphics, figure2, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, figure2);
 
             var figure3 = GetPixelsB(new List<Pixel> {
                 new Pixel(0, 10, Color.LightGoldenrodYellow),
@@ -174,7 +171,7 @@ namespace KGLaba3
                 new Pixel(-2, 6, Color.LightGoldenrodYellow),
                 },
                 new Pixel(-4, 8, Color.LightGoldenrodYellow));
-            paintPixels(graphics, figure3, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, figure3);
 
             var figure4 = GetPixelsB(new List<Pixel> {
                 new Pixel(-10, 6, Color.Red),
@@ -182,7 +179,7 @@ namespace KGLaba3
                 new Pixel(2, 6, Color.Red),
                 },
                 new Pixel(-4, 8, Color.Red));
-            paintPixels(graphics, figure4, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, figure4);
 
             var figure5 = GetPixelsB(new List<Pixel> {
                 new Pixel(-6, 2, Color.Yellow),
@@ -191,7 +188,7 @@ namespace KGLaba3
                 new Pixel(-4, 2, Color.Yellow),
                 },
                 new Pixel(-5, 3, Color.Yellow));
-            paintPixels(graphics, figure5, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, figure5);
 
             var figure6 = GetPixelsB(new List<Pixel> {
                 new Pixel(-2, 0, Color.SaddleBrown),
@@ -200,22 +197,29 @@ namespace KGLaba3
                 new Pixel(0, 0, Color.SaddleBrown),
                 },
                 new Pixel(-1, 2, Color.SaddleBrown));
-            paintPixels(graphics, figure6, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, figure6);
 
             var line1 = PaintLineCDA(-12, 0, -12, 16, Color.Black);
-            paintPixels(graphics, line1, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, line1);
 
             var line2 = PaintLineCDA(-12, 6, -10, 8, Color.Black);
             line2.AddRange(
                 PaintLineCDA(-12, 6, -14, 8, Color.Black)
             );
-            paintPixels(graphics, line2, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, line2);
 
             var line3 = PaintLineCDA(-12, 8, -10, 10, Color.Black);
             line3.AddRange(
                 PaintLineCDA(-12, 8, -14, 10, Color.Black)
             );
-            paintPixels(graphics, line3, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, line3);
+
+            stopwatch.Stop();
+            TimeSpan elapsedTime = stopwatch.Elapsed;
+
+            timeB = elapsedTime.TotalMilliseconds;
+
+            Console.WriteLine("Time B: " + timeB);
         }
 
         private void PictureBox3_Paint(object sender, PaintEventArgs e)
@@ -231,8 +235,8 @@ namespace KGLaba3
                 new Pixel(-12, 24, Color.Green),
                 },
                 new Pixel(-3 * 4, 2 * 4, Color.Green));
-            paintPixels(graphics, figure1, offsetXA, offsetYA, scaleA);
-            
+            paintPixels(graphics, figure1);
+
             var figure2 = GetPixelsC(new List<Pixel> {
                 new Pixel(-10, 0, Color.Orange),
                 new Pixel(-10, 6, Color.Orange),
@@ -240,7 +244,7 @@ namespace KGLaba3
                 new Pixel(2, 0, Color.Orange),
                 },
                 new Pixel(-4, 4, Color.Orange));
-            paintPixels(graphics, figure2, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, figure2);
 
             var figure3 = GetPixelsC(new List<Pixel> {
                 new Pixel(0, 10, Color.LightGoldenrodYellow),
@@ -252,7 +256,7 @@ namespace KGLaba3
                 new Pixel(-2, 6, Color.LightGoldenrodYellow),
                 },
                 new Pixel(-4, 8, Color.LightGoldenrodYellow));
-            paintPixels(graphics, figure3, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, figure3);
 
             var figure4 = GetPixelsC(new List<Pixel> {
                 new Pixel(-10, 6, Color.Red),
@@ -260,7 +264,7 @@ namespace KGLaba3
                 new Pixel(2, 6, Color.Red),
                 },
                 new Pixel(-4, 8, Color.Red));
-            paintPixels(graphics, figure4, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, figure4);
 
             var figure5 = GetPixelsC(new List<Pixel> {
                 new Pixel(-6, 2, Color.Yellow),
@@ -269,7 +273,7 @@ namespace KGLaba3
                 new Pixel(-4, 2, Color.Yellow),
                 },
                 new Pixel(-5, 3, Color.Yellow));
-            paintPixels(graphics, figure5, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, figure5);
 
             var figure6 = GetPixelsC(new List<Pixel> {
                 new Pixel(-2, 0, Color.SaddleBrown),
@@ -278,27 +282,29 @@ namespace KGLaba3
                 new Pixel(0, 0, Color.SaddleBrown),
                 },
                 new Pixel(-1, 2, Color.SaddleBrown));
-            paintPixels(graphics, figure6, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, figure6);
 
             var line1 = PaintLineBrezenthema(-12, 0, -12, 16, Color.Black);
-            paintPixels(graphics, line1, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, line1);
 
             var line2 = PaintLineBrezenthema(-12, 6, -10, 8, Color.Black);
             line2.AddRange(
                 PaintLineBrezenthema(-12, 6, -14, 8, Color.Black)
             );
-            paintPixels(graphics, line2, offsetXA, offsetYA, scaleA);
+            paintPixels(graphics, line2);
 
             var line3 = PaintLineBrezenthema(-12, 8, -10, 10, Color.Black);
             line3.AddRange(
                 PaintLineBrezenthema(-12, 8, -14, 10, Color.Black)
             );
-            paintPixels(graphics, line3, offsetXA, offsetYA, scaleA);
-           // stopwatch.Stop();
-            //TimeSpan elapsedTime = stopwatch.Elapsed;
+            paintPixels(graphics, line3);
+            stopwatch.Stop();
+            TimeSpan elapsedTime = stopwatch.Elapsed;
 
-           // timeMain = elapsedTime.TotalMilliseconds;
-            //Console.WriteLine(" Time Reference: " + timeMain + " Count total: " + pixelOutLineReference.Count());
+            timeMain = elapsedTime.TotalMilliseconds;
+
+            Console.WriteLine("Time Reference: " + timeMain);
+            
         }
 
 
@@ -345,8 +351,8 @@ namespace KGLaba3
             List<Pixel> pixels = new List<Pixel>();
 
             int length = Math.Max(Math.Abs(x2 - x1), Math.Abs(y2 - y1));
-            double dx = (double) (x2 - x1) / length;
-            double dy = (double) (y2 - y1) / length;
+            double dx = (double)(x2 - x1) / length;
+            double dy = (double)(y2 - y1) / length;
             double x = x1;
             double y = y1;
 
@@ -394,7 +400,6 @@ namespace KGLaba3
             }
             return pixels;
         }
-
 
         public List<Pixel> FillA(HashSet<Pixel> conture, Pixel seedPixel)
         {
@@ -457,7 +462,6 @@ namespace KGLaba3
 
             return insidePixels; // Возвращаем множество точек, которые необходимо закрасить
         }
-
 
         public List<Pixel> FillB(HashSet<Pixel> conture, Pixel seedPixel)
         {
@@ -550,7 +554,7 @@ namespace KGLaba3
                 {
                     stack.Push(new Pixel(currentPixel.x - 1, currentPixel.y + 1, currentPixel.color));
                 }
-                
+
                 pixel1 = new Pixel(currentPixel.x - 1, currentPixel.y, currentPixel.color);
                 pixel2 = new Pixel(currentPixel.x, currentPixel.y - 1, currentPixel.color);
                 if (!filledPixels.Contains(pixel1) && !contour.Contains(pixel1) && !filledPixels.Contains(pixel2) && !contour.Contains(pixel2))
@@ -612,10 +616,18 @@ namespace KGLaba3
 
             var allPixels = contourPixels.ToList();
             allPixels.AddRange(filledPixels);
-
             return allPixels;
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            // TODO  pictureBox1.Image всегда null
+            List<Pixel> diff1 = CalculateDiff(new Bitmap(pictureBox1.Image), new Bitmap(pictureBox3.Image));
+            List<Pixel> diff2 = CalculateDiff(new Bitmap(pictureBox2.Image), new Bitmap(pictureBox3.Image));
+
+            Console.WriteLine("Diff1 count: " + diff1.Count);
+            Console.WriteLine("Diff2 count: " + diff2.Count);
+        }
     }
 
 
