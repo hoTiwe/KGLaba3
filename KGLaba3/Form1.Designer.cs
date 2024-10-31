@@ -31,6 +31,9 @@
             pictureBox1 = new PictureBox();
             pictureBox2 = new PictureBox();
             pictureBox3 = new PictureBox();
+            label1 = new Label();
+            label2 = new Label();
+            label3 = new Label();
             button1 = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
@@ -70,13 +73,43 @@
             pictureBox3.TabStop = false;
             pictureBox3.Paint += PictureBox3_Paint;
             // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new Font("Segoe UI", 8F);
+            label1.Location = new Point(12, 430);
+            label1.Name = "label1";
+            label1.Size = new Size(38, 13);
+            label1.TabIndex = 5;
+            label1.Text = "label1";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Font = new Font("Segoe UI", 8F);
+            label2.Location = new Point(446, 430);
+            label2.Name = "label2";
+            label2.Size = new Size(38, 13);
+            label2.TabIndex = 6;
+            label2.Text = "label2";
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Font = new Font("Segoe UI", 8F);
+            label3.Location = new Point(884, 430);
+            label3.Name = "label3";
+            label3.Size = new Size(38, 13);
+            label3.TabIndex = 7;
+            label3.Text = "label3";
+            // 
             // button1
             // 
-            button1.Location = new Point(554, 482);
+            button1.Location = new Point(1308, 389);
             button1.Name = "button1";
             button1.Size = new Size(75, 23);
-            button1.TabIndex = 3;
-            button1.Text = "Сравнить";
+            button1.TabIndex = 8;
+            button1.Text = "button1";
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
@@ -84,8 +117,11 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1316, 601);
+            ClientSize = new Size(1435, 816);
             Controls.Add(button1);
+            Controls.Add(label3);
+            Controls.Add(label2);
+            Controls.Add(label1);
             Controls.Add(pictureBox3);
             Controls.Add(pictureBox2);
             Controls.Add(pictureBox1);
@@ -95,6 +131,7 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -102,6 +139,9 @@
         private PictureBox pictureBox1;
         private PictureBox pictureBox2;
         private PictureBox pictureBox3;
+        private Label label1;
+        private Label label2;
+        private Label label3;
         private Button button1;
     }
 }
