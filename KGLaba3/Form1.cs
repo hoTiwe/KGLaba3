@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using static System.Net.Mime.MediaTypeNames;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace KGLaba3
 {
@@ -94,77 +95,6 @@ namespace KGLaba3
         {
             graphicsA = e.Graphics;
 
-            var figure1 = GetPixelsA(new List<List<double>> {
-                    new List<double> { 16.49, 165.96 },
-                    new List<double> { 8.94, 153.43, },
-                    new List<double> { 26.83, 116.57, },
-                },
-                new Pixel(-3 * 4, 2 * 4, Color.Green));
-            paintPixels(graphicsA, figure1);
-            
-            var figure2 = GetPixelsA(new List<List<double>> {
-                    new List<double> { 10, 180 },
-                    new List<double> { 11.66, 149.04 },
-                    new List<double> { 6.32, 71.57 },
-                    new List<double> { 2, 0 },
-                },
-                new Pixel(-4, 4, Color.Orange));
-            paintPixels(graphicsA, figure2);
-
-            var figure3 = GetPixelsA(new List<List<double>> {
-                new List<double> { 10, 90 },
-                new List<double> { 12.17, 99.46 },
-                new List<double> { 12.65, 108.43 },
-                new List<double> { 11.66, 120.96 },
-                new List<double> { 10, 126.87 },
-                new List<double> { 7.21, 123.69 },
-                new List<double> { 6.32, 108.43 },
-                },
-                new Pixel(-4, 8, Color.LightGoldenrodYellow));
-            paintPixels(graphicsA, figure3);
-
-            var figure4 = GetPixelsA(new List<List<double>> {
-                new List<double> { 11.66, 149.04 },
-                new List<double> { 10.77, 111.80 },
-                new List<double> { 6.32, 71.57 },
-                },
-                new Pixel(-4, 8, Color.Red));
-            paintPixels(graphicsA, figure4);
-
-            var figure5 = GetPixelsA(new List<List<double>> {
-                new List<double> { 6.32, 161.57 },
-                new List<double> { 7.21, 146.31 },
-                new List<double> { 5.66, 135 },
-                new List<double> { 4.47, 153.43 },
-                },
-                new Pixel(-5, 3, Color.Yellow));
-            paintPixels(graphicsA, figure5);
-
-            var figure6 = GetPixelsA(new List<List<double>> {
-                new List<double> { 2, 180 },
-                new List<double> { 4.47, 116.57 },
-                new List<double> { 4, 90 },
-                new List<double> { 0, 0 },
-                },
-                new Pixel(-1, 2, Color.SaddleBrown));
-            paintPixels(graphicsA, figure6);
-
-            var line1 = PaintLineMain( 12, 180, 20, 126.87, Color.Black);
-            paintPixels(graphicsA, line1);
-
-            var line2 = PaintLineMain(13.42, 153.43, 12.81, 141.34, Color.Black);
-            line2.AddRange(
-                PaintLineMain(13.42, 153.43, 16.12, 150.26, Color.Black)
-            );
-            paintPixels(graphicsA, line2);
-
-            var line3 = PaintLineMain(14.42, 146.31, 14.14, 135, Color.Black);
-            line3.AddRange(
-                PaintLineMain(14.42, 146.31, 17.20, 144.46, Color.Black)
-            );
-            paintPixels(graphicsA, line3);
-
-            label1.Text = statsA + $"Всего веремени: {totalTimeA} ms.\n";
         }
 
         private void PictureBox2_Paint(object sender, PaintEventArgs e)
@@ -328,7 +258,7 @@ namespace KGLaba3
             int y1 = (int)Math.Round(r1 * Math.Sin(p1 * Math.PI / 180), 0);
 
             int x2 = (int)Math.Round(r2 * Math.Cos(p2 * Math.PI / 180), 0);
-            int y2 = (int) Math.Round(r2 * Math.Sin(p2 * Math.PI / 180), 0);
+            int y2 = (int)Math.Round(r2 * Math.Sin(p2 * Math.PI / 180), 0);
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -686,6 +616,36 @@ namespace KGLaba3
             return allPixels;
         }
 
+        public static List<Pixel> DrawPartCircle(int centerX, int centerY, int radius, bool paintRight = true, bool paintBottom = false)
+        {
+            List<Pixel> pixels = new List<Pixel>();
+
+            int x = 0;
+            int y = radius;
+            int d = 3 - 2 * radius;
+
+            // Первый октант
+            while (x <= y)
+            {
+                if (paintRight || paintBottom) pixels.Add(new Pixel(centerX + x, centerY - y, Color.Black));
+                if (paintRight || paintBottom) pixels.Add(new Pixel(centerX + y, centerY - x, Color.Black));
+                if (paintRight) pixels.Add(new Pixel(centerX + x, centerY + y, Color.Black));
+                if (paintRight) pixels.Add(new Pixel(centerX + y, centerY + x, Color.Black));
+
+                if (paintBottom) pixels.Add(new Pixel(centerX - x, centerY - y, Color.Black));
+                if (paintBottom) pixels.Add(new Pixel(centerX - y, centerY - x, Color.Black));
+                if (d < 0)
+                    d += 4 * x + 6;
+                else
+                {
+                    d += 4 * (x - y) + 10;
+                    y--;
+                }
+                x++;
+            }
+            return pixels;
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             List<Pixel> diff1 = CalculateDiff(pixelsA, pixelsC);
@@ -705,11 +665,54 @@ namespace KGLaba3
             List<Pixel> diff4 = CalculateDiff(pixelsB, pixelsA);
             for (int i = 0; i < diff3.Count; i++)
             {
-                diff4[i].color = Color.FromArgb( 255 - diff4[i].color.R, 255 - diff4[i].color.G, 255 - diff4[i].color.B);
+                diff4[i].color = Color.FromArgb(255 - diff4[i].color.R, 255 - diff4[i].color.G, 255 - diff4[i].color.B);
                 paintPixels(pictureBox2.CreateGraphics(), [diff4[i]]);
             }
         }
 
+        private void button2_Click(object sender, EventArgs e)
+        {
+            int x = Int32.Parse(textBox1.Text);
+            int y = Int32.Parse(textBox2.Text);
+            int H = Int32.Parse(textBox3.Text);
+            List<Pixel> pixels = PaintLineBrezenthema(x, y, x, y - H, Color.Black);
+            pixels.AddRange(DrawPartCircle(x, y - H / 2, H / 2));
+            paintPixels(pictureBox1.CreateGraphics(), pixels);
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            int x = Int32.Parse(textBox1.Text);
+            int y = Int32.Parse(textBox2.Text);
+            int H = Int32.Parse(textBox3.Text);
+            List<Pixel> pixels = PaintLineBrezenthema(x, y, x, y - H, Color.Black);
+            pixels.AddRange(DrawPartCircle(x, y - H / 4, H / 4));
+            pixels.AddRange(DrawPartCircle(x, y - H * 3 / 4, H / 4));
+            paintPixels(pictureBox1.CreateGraphics(), pixels);
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            int x = Int32.Parse(textBox1.Text);
+            int y = Int32.Parse(textBox2.Text);
+            int H = Int32.Parse(textBox3.Text);
+            List<Pixel> pixels = PaintLineBrezenthema(x, y, x, y - H, Color.Black);
+            pixels.AddRange(DrawPartCircle(x, y - H / 4, H / 4));
+            pixels.AddRange(PaintLineBrezenthema(x, y - H / 2 + 1, x + H / 4, y - H, Color.Black));
+            paintPixels(pictureBox1.CreateGraphics(), pixels);
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            int x = Int32.Parse(textBox1.Text);
+            int y = Int32.Parse(textBox2.Text);
+            int H = Int32.Parse(textBox3.Text);
+
+            List<Pixel> pixels = PaintLineBrezenthema(x, y, x, y - H * 3 / 4, Color.Black);
+
+            pixels.AddRange(DrawPartCircle(x - H / 4, y - H * 3 / 4, H / 4, false, true));
+            paintPixels(pictureBox1.CreateGraphics(), pixels);
+        }
     }
 
 
