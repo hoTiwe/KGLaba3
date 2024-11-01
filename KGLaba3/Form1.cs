@@ -96,8 +96,8 @@ namespace KGLaba3
 
             var figure1 = GetPixelsA(new List<List<double>> {
                     new List<double> { 16.49, 165.96 },
-                    new List<double> {8.94, 153.43, },
-                    new List<double> {26.83, 116.57, },
+                    new List<double> { 8.94, 153.43, },
+                    new List<double> { 26.83, 116.57, },
                 },
                 new Pixel(-3 * 4, 2 * 4, Color.Green));
             paintPixels(graphicsA, figure1);
@@ -368,7 +368,7 @@ namespace KGLaba3
             }
 
             stopwatch.Stop();
-            statsA += $"Прямая с координатами ({x1}; {y1}) - ({x2}; {y2}): {stopwatch.Elapsed.TotalMilliseconds} ms.\n";
+            statsA += $"Прямая ({r1}; {p1}) ({r2}; {p2}) или ({x1}; {y1}) - ({x2}; {y2}): {stopwatch.Elapsed.TotalMilliseconds} ms.\n";
             totalTimeA += stopwatch.Elapsed.TotalMilliseconds;
             pixelsA.AddRange(pixels);
 
@@ -689,16 +689,13 @@ namespace KGLaba3
         private void button1_Click(object sender, EventArgs e)
         {
             List<Pixel> diff1 = CalculateDiff(pixelsA, pixelsC);
-            Console.WriteLine("Diff A C " + diff1.Count);
+            label1.Text += $"I = {diff1.Count}\nm = {(double)diff1.Count / (pictureBox2.Width / scale * pictureBox2.Height / scale)}\n";
 
             List<Pixel> diff2 = CalculateDiff(pixelsB, pixelsC);
-            Console.WriteLine("Diff A B " + diff2.Count);
 
-            label1.Text += $"I = {diff1.Count}\nm = {(double)diff1.Count / (pictureBox1.Width * pictureBox1.Height)}\n";
-            label2.Text += $"I = {diff2.Count}\nm = {(double)diff2.Count / (pictureBox2.Width * pictureBox2.Height)}\n";
+            label2.Text += $"I = {diff2.Count}\nm = {(double)diff2.Count / (pictureBox2.Width / scale * pictureBox2.Height / scale)}\n";
 
             List<Pixel> diff3 = CalculateDiff(pixelsA, pixelsB);
-            Console.WriteLine("Diff A B " + diff3.Count);
             for (int i = 0; i < diff3.Count; i++)
             {
                 diff3[i].color = Color.FromArgb(255 - diff3[i].color.R, 255 - diff3[i].color.G, 255 - diff3[i].color.B);
@@ -706,7 +703,6 @@ namespace KGLaba3
             }
 
             List<Pixel> diff4 = CalculateDiff(pixelsB, pixelsA);
-            Console.WriteLine("Diff A B " + diff3.Count);
             for (int i = 0; i < diff3.Count; i++)
             {
                 diff4[i].color = Color.FromArgb( 255 - diff4[i].color.R, 255 - diff4[i].color.G, 255 - diff4[i].color.B);
