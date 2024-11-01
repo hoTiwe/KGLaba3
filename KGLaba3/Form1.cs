@@ -93,73 +93,74 @@ namespace KGLaba3
         private void PictureBox1_Paint(object sender, PaintEventArgs e)
         {
             graphicsA = e.Graphics;
-            var figure1 = GetPixelsA(new List<Pixel> {
-                new Pixel(-16, 4, Color.Green),
-                new Pixel(-8, 4, Color.Green),
-                new Pixel(-12, 24, Color.Green),
+
+            var figure1 = GetPixelsA(new List<List<double>> {
+                    new List<double> { 16.49, 165.96 },
+                    new List<double> {8.94, 153.43, },
+                    new List<double> {26.83, 116.57, },
                 },
                 new Pixel(-3 * 4, 2 * 4, Color.Green));
             paintPixels(graphicsA, figure1);
-
-            var figure2 = GetPixelsA(new List<Pixel> {
-                new Pixel(-10, 0, Color.Orange),
-                new Pixel(-10, 6, Color.Orange),
-                new Pixel(2, 6, Color.Orange),
-                new Pixel(2, 0, Color.Orange),
+            
+            var figure2 = GetPixelsA(new List<List<double>> {
+                    new List<double> { 10, 180 },
+                    new List<double> { 11.66, 149.04 },
+                    new List<double> { 6.32, 71.57 },
+                    new List<double> { 2, 0 },
                 },
                 new Pixel(-4, 4, Color.Orange));
             paintPixels(graphicsA, figure2);
 
-            var figure3 = GetPixelsA(new List<Pixel> {
-                new Pixel(0, 10, Color.LightGoldenrodYellow),
-                new Pixel(-2, 12, Color.LightGoldenrodYellow),
-                new Pixel(-4, 12, Color.LightGoldenrodYellow),
-                new Pixel(-6, 10, Color.LightGoldenrodYellow),
-                new Pixel(-6, 8, Color.LightGoldenrodYellow),
-                new Pixel(-4, 6, Color.LightGoldenrodYellow),
-                new Pixel(-2, 6, Color.LightGoldenrodYellow),
+            var figure3 = GetPixelsA(new List<List<double>> {
+                new List<double> { 10, 90 },
+                new List<double> { 12.17, 99.46 },
+                new List<double> { 12.65, 108.43 },
+                new List<double> { 11.66, 120.96 },
+                new List<double> { 10, 126.87 },
+                new List<double> { 7.21, 123.69 },
+                new List<double> { 6.32, 108.43 },
                 },
                 new Pixel(-4, 8, Color.LightGoldenrodYellow));
             paintPixels(graphicsA, figure3);
 
-            var figure4 = GetPixelsA(new List<Pixel> {
-                new Pixel(-10, 6, Color.Red),
-                new Pixel(-4, 10, Color.Red),
-                new Pixel(2, 6, Color.Red),
+            var figure4 = GetPixelsA(new List<List<double>> {
+                new List<double> { 11.66, 149.04 },
+                new List<double> { 10.77, 111.80 },
+                new List<double> { 6.32, 71.57 },
                 },
                 new Pixel(-4, 8, Color.Red));
             paintPixels(graphicsA, figure4);
 
-            var figure5 = GetPixelsA(new List<Pixel> {
-                new Pixel(-6, 2, Color.Yellow),
-                new Pixel(-6, 4, Color.Yellow),
-                new Pixel(-4, 4, Color.Yellow),
-                new Pixel(-4, 2, Color.Yellow),
+            var figure5 = GetPixelsA(new List<List<double>> {
+                new List<double> { 6.32, 161.57 },
+                new List<double> { 7.21, 146.31 },
+                new List<double> { 5.66, 135 },
+                new List<double> { 4.47, 153.43 },
                 },
                 new Pixel(-5, 3, Color.Yellow));
             paintPixels(graphicsA, figure5);
 
-            var figure6 = GetPixelsA(new List<Pixel> {
-                new Pixel(-2, 0, Color.SaddleBrown),
-                new Pixel(-2, 4, Color.SaddleBrown),
-                new Pixel(0, 4, Color.SaddleBrown),
-                new Pixel(0, 0, Color.SaddleBrown),
+            var figure6 = GetPixelsA(new List<List<double>> {
+                new List<double> { 2, 180 },
+                new List<double> { 4.47, 116.57 },
+                new List<double> { 4, 90 },
+                new List<double> { 0, 0 },
                 },
                 new Pixel(-1, 2, Color.SaddleBrown));
             paintPixels(graphicsA, figure6);
 
-            var line1 = PaintLineMain(-12, 0, -12, 16, Color.Black);
+            var line1 = PaintLineMain( 12, 180, 20, 126.87, Color.Black);
             paintPixels(graphicsA, line1);
 
-            var line2 = PaintLineMain(-12, 6, -10, 8, Color.Black);
+            var line2 = PaintLineMain(13.42, 153.43, 12.81, 141.34, Color.Black);
             line2.AddRange(
-                PaintLineMain(-12, 6, -14, 8, Color.Black)
+                PaintLineMain(13.42, 153.43, 16.12, 150.26, Color.Black)
             );
             paintPixels(graphicsA, line2);
 
-            var line3 = PaintLineMain(-12, 8, -10, 10, Color.Black);
+            var line3 = PaintLineMain(14.42, 146.31, 14.14, 135, Color.Black);
             line3.AddRange(
-                PaintLineMain(-12, 8, -14, 10, Color.Black)
+                PaintLineMain(14.42, 146.31, 17.20, 144.46, Color.Black)
             );
             paintPixels(graphicsA, line3);
 
@@ -321,8 +322,14 @@ namespace KGLaba3
         }
 
 
-        List<Pixel> PaintLineMain(int x1, int y1, int x2, int y2, Color color)
+        List<Pixel> PaintLineMain(double r1, double p1, double r2, double p2, Color color)
         {
+            int x1 = (int)Math.Round(r1 * Math.Cos(p1 * Math.PI / 180), 0);
+            int y1 = (int)Math.Round(r1 * Math.Sin(p1 * Math.PI / 180), 0);
+
+            int x2 = (int)Math.Round(r2 * Math.Cos(p2 * Math.PI / 180), 0);
+            int y2 = (int) Math.Round(r2 * Math.Sin(p2 * Math.PI / 180), 0);
+
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
@@ -409,27 +416,27 @@ namespace KGLaba3
 
             int sx = x1 < x2 ? 1 : -1;
             int sy = y1 < y2 ? 1 : -1;
-
+            int x = x1, y = y1;
             int err = dx - dy;
 
             while (true)
             {
-                pixels.Add(new Pixel(x1, y1, color));
+                pixels.Add(new Pixel(x, y, color));
 
-                if (x1 == x2 && y1 == y2) break;
+                if (x == x2 && y == y2) break;
 
                 int e2 = 2 * err;
 
                 if (e2 > -dy)
                 {
                     err -= dy;
-                    x1 += sx;
+                    x += sx;
                 }
 
                 if (e2 < dx)
                 {
                     err += dx;
-                    y1 += sy;
+                    y += sy;
                 }
             }
             stopwatch.Stop();
@@ -561,10 +568,9 @@ namespace KGLaba3
 
             // Восьмисвязные направления
             var directions = new List<(int dx, int dy)>
-        {
-            (1, 0), (0, 1), (-1, 0), (0, -1),   // основные направления
-            //(1, 1), (-1, 1), (-1, -1), (1, -1)  // диагональные направления
-        };
+            {
+                (1, 0), (0, 1), (-1, 0), (0, -1),   // основные направления
+            };
 
             while (stack.Count > 0)
             {
@@ -626,15 +632,14 @@ namespace KGLaba3
 
             return new List<Pixel>(filledPixels);
         }
-
-        public List<Pixel> GetPixelsA(List<Pixel> vertices, Pixel seedPixel)
+        public List<Pixel> GetPixelsA(List<List<double>> vertices, Pixel seedPixel)
         {
             var contourPixels = new HashSet<Pixel>();
             for (int i = 0; i < vertices.Count; i++)
             {
                 var start = vertices[i];
                 var end = vertices[(i + 1) % vertices.Count];
-                contourPixels.UnionWith(PaintLineMain(start.x, start.y, end.x, end.y, start.color));
+                contourPixels.UnionWith(PaintLineMain(start[0], start[1], end[0], end[1], seedPixel.color));
             }
 
             List<Pixel> filledPixels = FillA(contourPixels, seedPixel);
