@@ -1,9 +1,11 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using static System.Net.Mime.MediaTypeNames;
+using System.Threading;
+using System.Windows.Forms.VisualStyles;
 
 namespace KGLaba3
 {
@@ -13,8 +15,10 @@ namespace KGLaba3
         List<Pixel> pixelsB = new List<Pixel>();
         List<Pixel> pixelsC = new List<Pixel>();
 
-        int scale = 10;
+        int scale = 7;
         int offsetX = 20, offsetY = 10;
+        int coeffNet = 0;
+        int coeffOsi = 0;
 
         double totalTimeA = 0;
         double totalTimeB = 0;
@@ -25,6 +29,12 @@ namespace KGLaba3
 
         Graphics graphicsA = null;
         Graphics graphicsB = null;
+
+        private Bitmap bitmap;
+        private Pixel forpaint;
+        private int currentPixelIndex = 0;
+        private List<Pixel> pixelsToPaint = new List<Pixel>();
+
         public Form1()
         {
             InitializeComponent();
@@ -32,10 +42,111 @@ namespace KGLaba3
 
         void paintPixels(Graphics graphics, List<Pixel> pixels)
         {
+
             for (int i = 0; i < pixels.Count(); i++)
             {
                 SolidBrush color = new SolidBrush(pixels[i].color);
-                graphics.FillRectangle(color, (pixels[i].x + offsetX) * scale, 400 - (pixels[i].y + offsetY) * scale, 1 * scale, 1 * scale);
+                int x = (pixels[i].x + offsetX) * scale;
+                int y = 400 - (pixels[i].y + offsetY) * scale;
+                graphics.FillRectangle(color, x, y, scale - coeffNet, scale - coeffNet);
+            }
+        }
+
+        void paintX(Graphics graphics)
+        {
+            int m = 40;
+            int x = (offsetX - m / 2) * scale;
+            int y = 400 - (offsetY) * scale + scale - 2;
+            for (int i = 0; i < m; i++)
+            {
+                for (int j = 0; j < scale; j++)
+                {
+                    graphics.FillRectangle(new SolidBrush(Color.Black), x + j, y, 2, 2);
+                }
+                x += scale;
+            }
+        }
+
+        void paintY(Graphics graphics)
+        {
+            int m = 50;
+            int x = offsetX * scale - scale + 2;
+            int y = 400 - (offsetY - m / 2) * scale;
+            for (int i = 0; i < m; i++)
+            {
+                for (int j = 0; j < scale; j++)
+                {
+                    graphics.FillRectangle(new SolidBrush(Color.Black), x, y + j, 2, 2);
+                }
+                y -= scale;
+            }
+        }
+        private void buttonSetScale_Click(object sender, EventArgs e)
+        {
+            if (int.TryParse(textBox1.Text, out int newScale))
+            {
+                scale = newScale; 
+                pictureBox1.Invalidate(); 
+            }
+            else
+            {
+                MessageBox.Show("Please enter a valid integer for scale."); 
+            }
+        }
+        private void buttonSetOffset_Click(object sender, EventArgs e)
+        {
+            
+            if (int.TryParse(textBox3.Text, out int newOffsetX) &&
+                int.TryParse(textBox3.Text, out int newOffsetY))
+            {
+                offsetX = newOffsetX;
+                offsetY = newOffsetY;
+                
+                pictureBox1.Invalidate();
+            }
+            else
+            {
+               
+                MessageBox.Show("Please enter valid integers for offsets.");
+            }
+        }
+
+        private void checkBox_CheckedOsi(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked)
+            {
+                coeffOsi = 1;
+                pictureBox1.Invalidate();
+                pictureBox2.Invalidate();
+                pictureBox3.Invalidate();
+            }
+            else
+            {
+                coeffOsi = 0;
+                Console.WriteLine("Г‘ГҐГІГЄГ  off");
+                pictureBox1.Invalidate();
+                pictureBox2.Invalidate();
+                pictureBox3.Invalidate();
+            }
+        }
+
+        private void checkBoxNetX_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox2.Checked)
+            {
+                coeffNet = 1;
+                Console.WriteLine("Г‘ГҐГІГЄГ  ГўГЄГ«ГѕГ·ГҐГ­Г ");
+                pictureBox1.Invalidate();
+                pictureBox2.Invalidate();
+                pictureBox3.Invalidate();
+            }
+            else
+            {
+                coeffNet = 0;
+                Console.WriteLine("Г‘ГҐГІГЄГ  off");
+                pictureBox1.Invalidate();
+                pictureBox2.Invalidate();
+                pictureBox3.Invalidate();
             }
         }
 
@@ -90,6 +201,7 @@ namespace KGLaba3
             return result.ToList();
         }
 
+
         private void PictureBox1_Paint(object sender, PaintEventArgs e)
         {
             graphicsA = e.Graphics;
@@ -101,7 +213,6 @@ namespace KGLaba3
                 },
                 new Pixel(-3 * 4, 2 * 4, Color.Green));
             paintPixels(graphicsA, figure1);
-            
             var figure2 = GetPixelsA(new List<List<double>> {
                     new List<double> { 10, 180 },
                     new List<double> { 11.66, 149.04 },
@@ -110,7 +221,6 @@ namespace KGLaba3
                 },
                 new Pixel(-4, 4, Color.Orange));
             paintPixels(graphicsA, figure2);
-
             var figure3 = GetPixelsA(new List<List<double>> {
                 new List<double> { 10, 90 },
                 new List<double> { 12.17, 99.46 },
@@ -149,7 +259,7 @@ namespace KGLaba3
                 new Pixel(-1, 2, Color.SaddleBrown));
             paintPixels(graphicsA, figure6);
 
-            var line1 = PaintLineMain( 12, 180, 20, 126.87, Color.Black);
+            var line1 = PaintLineMain(12, 180, 20, 126.87, Color.Black);
             paintPixels(graphicsA, line1);
 
             var line2 = PaintLineMain(13.42, 153.43, 12.81, 141.34, Color.Black);
@@ -163,10 +273,16 @@ namespace KGLaba3
                 PaintLineMain(14.42, 146.31, 17.20, 144.46, Color.Black)
             );
             paintPixels(graphicsA, line3);
-
-            label1.Text = statsA + $"Всего веремени: {totalTimeA} ms.\n";
+            if (coeffOsi == 1)
+            {
+                paintX(graphicsA);
+                paintY(graphicsA);
+            }
+            //label1.Text = statsA + $"Р’СЃРµРіРѕ РІРµСЂРµРјРµРЅРё: {totalTimeA} ms.\n";
+            Console.WriteLine("Рђ Р°Р»РіРѕСЂРёС‚РјС‹");
+            Console.WriteLine(statsA + $"Р’СЃРµРіРѕ РІРµСЂРµРјРµРЅРё: {totalTimeA} ms.\n");
         }
-
+        
         private void PictureBox2_Paint(object sender, PaintEventArgs e)
         {
             graphicsB = e.Graphics;
@@ -176,7 +292,7 @@ namespace KGLaba3
                 new Pixel(-8, 4, Color.Green),
                 new Pixel(-12, 24, Color.Green),
                 },
-                new Pixel(-3 * 4, 2 * 4, Color.Green));
+                new Pixel(-3 * 4, 2 * 4, Color.Green), "1");
             paintPixels(graphicsB, figure1);
 
             var figure2 = GetPixelsB(new List<Pixel> {
@@ -185,7 +301,7 @@ namespace KGLaba3
                 new Pixel(2, 6, Color.Orange),
                 new Pixel(2, 0, Color.Orange),
                 },
-                new Pixel(-4, 4, Color.Orange));
+                new Pixel(-4, 4, Color.Orange), "2");
             paintPixels(graphicsB, figure2);
 
             var figure3 = GetPixelsB(new List<Pixel> {
@@ -197,7 +313,7 @@ namespace KGLaba3
                 new Pixel(-4, 6, Color.LightGoldenrodYellow),
                 new Pixel(-2, 6, Color.LightGoldenrodYellow),
                 },
-                new Pixel(-4, 8, Color.LightGoldenrodYellow));
+                new Pixel(-4, 8, Color.LightGoldenrodYellow), "3");
             paintPixels(graphicsB, figure3);
 
             var figure4 = GetPixelsB(new List<Pixel> {
@@ -205,7 +321,7 @@ namespace KGLaba3
                 new Pixel(-4, 10, Color.Red),
                 new Pixel(2, 6, Color.Red),
                 },
-                new Pixel(-4, 8, Color.Red));
+                new Pixel(-4, 8, Color.Red), "4");
             paintPixels(graphicsB, figure4);
 
             var figure5 = GetPixelsB(new List<Pixel> {
@@ -214,7 +330,7 @@ namespace KGLaba3
                 new Pixel(-4, 4, Color.Yellow),
                 new Pixel(-4, 2, Color.Yellow),
                 },
-                new Pixel(-5, 3, Color.Yellow));
+                new Pixel(-5, 3, Color.Yellow), "5");
             paintPixels(graphicsB, figure5);
 
             var figure6 = GetPixelsB(new List<Pixel> {
@@ -223,7 +339,7 @@ namespace KGLaba3
                 new Pixel(0, 4, Color.SaddleBrown),
                 new Pixel(0, 0, Color.SaddleBrown),
                 },
-                new Pixel(-1, 2, Color.SaddleBrown));
+                new Pixel(-1, 2, Color.SaddleBrown), "6");
             paintPixels(graphicsB, figure6);
 
             var line1 = PaintLineCDA(-12, 0, -12, 16, Color.Black);
@@ -240,8 +356,14 @@ namespace KGLaba3
                 PaintLineCDA(-12, 8, -14, 10, Color.Black)
             );
             paintPixels(graphicsB, line3);
-
-            label2.Text = statsB + $"Всего веремени: {totalTimeB} ms.\n";
+            if (coeffOsi == 1)
+            {
+                paintX(graphicsB);
+                paintY(graphicsB);
+            }
+            //label2.Text = statsB + $"Р’СЃРµРіРѕ РІРµСЂРµРјРµРЅРё: {totalTimeB} ms.\n";
+            Console.WriteLine("B Р°Р»РіРѕСЂРёС‚РјС‹");
+            Console.WriteLine(statsB + $"Р’СЃРµРіРѕ РІРµСЂРµРјРµРЅРё: {totalTimeB} ms.\n");
         }
 
         private void PictureBox3_Paint(object sender, PaintEventArgs e)
@@ -317,8 +439,15 @@ namespace KGLaba3
                 PaintLineBrezenthema(-12, 8, -14, 10, Color.Black)
             );
             paintPixels(graphics, line3);
+            if (coeffOsi == 1)
+            {
+                paintX(graphics);
+                paintY(graphics);
+            }
 
-            label3.Text = statsC + $"Всего веремени: {totalTimeC} ms.\n";
+            //label3.Text = statsC + $"Р’СЃРµРіРѕ РІРµСЂРµРјРµРЅРё: {totalTimeC} ms.\n";
+            Console.WriteLine("Р­С‚Р°Р»РѕРЅРЅС‹Рµ Р°Р»РіРѕСЂРёС‚РјС‹");
+            Console.WriteLine(statsC + $"Р’СЃРµРіРѕ РІРµСЂРµРјРµРЅРё: {totalTimeC} ms.\n");
         }
 
 
@@ -328,7 +457,7 @@ namespace KGLaba3
             int y1 = (int)Math.Round(r1 * Math.Sin(p1 * Math.PI / 180), 0);
 
             int x2 = (int)Math.Round(r2 * Math.Cos(p2 * Math.PI / 180), 0);
-            int y2 = (int) Math.Round(r2 * Math.Sin(p2 * Math.PI / 180), 0);
+            int y2 = (int)Math.Round(r2 * Math.Sin(p2 * Math.PI / 180), 0);
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -368,7 +497,7 @@ namespace KGLaba3
             }
 
             stopwatch.Stop();
-            statsA += $"Прямая с координатами ({x1}; {y1}) - ({x2}; {y2}): {stopwatch.Elapsed.TotalMilliseconds} ms.\n";
+            statsA += $"РџСЂСЏРјР°СЏ СЃ РєРѕРѕСЂРґРёРЅР°С‚Р°РјРё ({x1}; {y1}) - ({x2}; {y2}): {stopwatch.Elapsed.TotalMilliseconds} ms.\n";
             totalTimeA += stopwatch.Elapsed.TotalMilliseconds;
             pixelsA.AddRange(pixels);
 
@@ -398,7 +527,9 @@ namespace KGLaba3
             }
 
             stopwatch.Stop();
-            statsB += $"Прямая с координатами ({x1}; {y1}) - ({x2}; {y2}): {stopwatch.Elapsed.TotalMilliseconds} ms.\n";
+            statsB += $"РџСЂСЏРјР°СЏ СЃ РєРѕРѕСЂРґРёРЅР°С‚Р°РјРё ({x1}; {y1}) - ({x2}; {y2}): {stopwatch.Elapsed.TotalMilliseconds} ms.\n";
+            double res = Math.Sqrt(Math.Pow(x2 - x1, 2) + Math.Pow(y2 - y1, 2));
+            label2.Text += $"Р Р°СЃСЃС‚РѕСЏРЅРёРµ = {res}\n";
             totalTimeB += stopwatch.Elapsed.TotalMilliseconds;
             pixelsB.AddRange(pixels);
 
@@ -440,7 +571,7 @@ namespace KGLaba3
                 }
             }
             stopwatch.Stop();
-            statsC += $"Прямая с координатами ({x1}; {y1}) - ({x2}; {y2}): {stopwatch.Elapsed.TotalMilliseconds} ms.\n";
+            statsC += $"РџСЂСЏРјР°СЏ СЃ РєРѕРѕСЂРґРёРЅР°С‚Р°РјРё ({x1}; {y1}) - ({x2}; {y2}): {stopwatch.Elapsed.TotalMilliseconds} ms.\n";
             totalTimeC += stopwatch.Elapsed.TotalMilliseconds;
             pixelsC.AddRange(pixels);
 
@@ -464,11 +595,11 @@ namespace KGLaba3
                 int x = pixel.x;
                 int y = pixel.y;
 
-                // Пропуск пикселя, если он уже закрашен или является частью контура
+                // РџСЂРѕРїСѓСЃРє РїРёРєСЃРµР»СЏ, РµСЃР»Рё РѕРЅ СѓР¶Рµ Р·Р°РєСЂР°С€РµРЅ РёР»Рё СЏРІР»СЏРµС‚СЃСЏ С‡Р°СЃС‚СЊСЋ РєРѕРЅС‚СѓСЂР°
                 if (conture.Contains(pixel) || insidePixels.Contains(pixel))
                     continue;
 
-                // Ищем левую границу интервала
+                // РС‰РµРј Р»РµРІСѓСЋ РіСЂР°РЅРёС†Сѓ РёРЅС‚РµСЂРІР°Р»Р°
                 int left = x;
                 while (!conture.Contains(new Pixel(left, y, color)) && !insidePixels.Contains(new Pixel(left, y, color)))
                 {
@@ -476,7 +607,7 @@ namespace KGLaba3
                 }
                 left++;
 
-                // Ищем правую границу интервала
+                // РС‰РµРј РїСЂР°РІСѓСЋ РіСЂР°РЅРёС†Сѓ РёРЅС‚РµСЂРІР°Р»Р°
                 int right = x;
                 while (!conture.Contains(new Pixel(right, y, color)) && !insidePixels.Contains(new Pixel(right, y, color)))
                 {
@@ -484,23 +615,23 @@ namespace KGLaba3
                 }
                 right--;
 
-                // Добавляем пиксели интервала в список закрашиваемых
+                // Р”РѕР±Р°РІР»СЏРµРј РїРёРєСЃРµР»Рё РёРЅС‚РµСЂРІР°Р»Р° РІ СЃРїРёСЃРѕРє Р·Р°РєСЂР°С€РёРІР°РµРјС‹С…
                 for (int i = left; i <= right; i++)
                 {
                     Pixel nPixel = new Pixel(i, y, color);
                     insidePixels.Add(nPixel);
                 }
 
-                // Проверяем верхний и нижний ряды для интервалов
+                // РџСЂРѕРІРµСЂСЏРµРј РІРµСЂС…РЅРёР№ Рё РЅРёР¶РЅРёР№ СЂСЏРґС‹ РґР»СЏ РёРЅС‚РµСЂРІР°Р»РѕРІ
                 for (int i = left; i <= right; i++)
                 {
-                    // Верхний ряд
+                    // Р’РµСЂС…РЅРёР№ СЂСЏРґ
                     if (!conture.Contains(new Pixel(i, y - 1, color)) && !insidePixels.Contains(new Pixel(i, y - 1, color)))
                     {
                         stack.Push(new Pixel(i, y - 1, color));
                     }
 
-                    // Нижний ряд
+                    // РќРёР¶РЅРёР№ СЂСЏРґ
                     if (!conture.Contains(new Pixel(i, y + 1, color)) && !insidePixels.Contains(new Pixel(i, y + 1, color)))
                     {
                         stack.Push(new Pixel(i, y + 1, color));
@@ -508,11 +639,12 @@ namespace KGLaba3
                 }
             }
             stopwatch.Stop();
-            statsA += $"Закраска области: {stopwatch.Elapsed.TotalMilliseconds} ms.\n";
+            statsA += $"Р—Р°РєСЂР°СЃРєР° РѕР±Р»Р°СЃС‚Рё: {stopwatch.Elapsed.TotalMilliseconds} ms.\n";
+
             totalTimeA += stopwatch.Elapsed.TotalMilliseconds;
             pixelsA.AddRange(insidePixels);
 
-            return insidePixels; // Возвращаем множество точек, которые необходимо закрасить
+            return insidePixels; // Р’РѕР·РІСЂР°С‰Р°РµРј РјРЅРѕР¶РµСЃС‚РІРѕ С‚РѕС‡РµРє, РєРѕС‚РѕСЂС‹Рµ РЅРµРѕР±С…РѕРґРёРјРѕ Р·Р°РєСЂР°СЃРёС‚СЊ
         }
 
         public List<Pixel> FillB(HashSet<Pixel> conture, Pixel seedPixel)
@@ -548,7 +680,7 @@ namespace KGLaba3
             }
 
             stopwatch.Stop();
-            statsB += $"Закраска области: {stopwatch.Elapsed.TotalMilliseconds} ms.\n";
+            statsB += $"Р—Р°РєСЂР°СЃРєР° РѕР±Р»Р°СЃС‚Рё: {stopwatch.Elapsed.TotalMilliseconds} ms.\n";
             totalTimeB += stopwatch.Elapsed.TotalMilliseconds;
             pixelsB.AddRange(filledPixels);
 
@@ -563,27 +695,27 @@ namespace KGLaba3
             var stack = new Stack<Pixel>();
             var filledPixels = new HashSet<Pixel>();
 
-            // Затравочный пиксель
+            // Р—Р°С‚СЂР°РІРѕС‡РЅС‹Р№ РїРёРєСЃРµР»СЊ
             stack.Push(seedPixel);
 
-            // Восьмисвязные направления
+            // Р’РѕСЃСЊРјРёСЃРІСЏР·РЅС‹Рµ РЅР°РїСЂР°РІР»РµРЅРёСЏ
             var directions = new List<(int dx, int dy)>
             {
-                (1, 0), (0, 1), (-1, 0), (0, -1),   // основные направления
+                (1, 0), (0, 1), (-1, 0), (0, -1),   // РѕСЃРЅРѕРІРЅС‹Рµ РЅР°РїСЂР°РІР»РµРЅРёСЏ
             };
 
             while (stack.Count > 0)
             {
                 var currentPixel = stack.Pop();
 
-                // Пропускаем, если пиксель уже закрашен или является частью контура
+                // РџСЂРѕРїСѓСЃРєР°РµРј, РµСЃР»Рё РїРёРєСЃРµР»СЊ СѓР¶Рµ Р·Р°РєСЂР°С€РµРЅ РёР»Рё СЏРІР»СЏРµС‚СЃСЏ С‡Р°СЃС‚СЊСЋ РєРѕРЅС‚СѓСЂР°
                 if (filledPixels.Contains(currentPixel) || contour.Contains(currentPixel))
                     continue;
 
-                // Добавляем пиксель в список закрашенных
+                // Р”РѕР±Р°РІР»СЏРµРј РїРёРєСЃРµР»СЊ РІ СЃРїРёСЃРѕРє Р·Р°РєСЂР°С€РµРЅРЅС‹С…
                 filledPixels.Add(currentPixel);
 
-                // Добавляем соседние пиксели по всем 8 направлениям
+                // Р”РѕР±Р°РІР»СЏРµРј СЃРѕСЃРµРґРЅРёРµ РїРёРєСЃРµР»Рё РїРѕ РІСЃРµРј 8 РЅР°РїСЂР°РІР»РµРЅРёСЏРј
                 foreach (var (dx, dy) in directions)
                 {
                     int newX = currentPixel.x + dx;
@@ -626,7 +758,7 @@ namespace KGLaba3
             }
 
             stopwatch.Stop();
-            statsC += $"Закраска области: {stopwatch.Elapsed.TotalMilliseconds} ms.\n";
+            statsC += $"Р—Р°РєСЂР°СЃРєР° РѕР±Р»Р°СЃС‚Рё: {stopwatch.Elapsed.TotalMilliseconds} ms.\n";
             totalTimeC += stopwatch.Elapsed.TotalMilliseconds;
             pixelsC.AddRange(filledPixels);
 
@@ -650,9 +782,11 @@ namespace KGLaba3
             return allPixels;
         }
 
-        public List<Pixel> GetPixelsB(List<Pixel> vertices, Pixel seedPixel)
+        public List<Pixel> GetPixelsB(List<Pixel> vertices, Pixel seedPixel, String figure)
         {
+            label2.Text += $"Р¤РёРіСѓСЂР°  {figure}: ";
             var contourPixels = new HashSet<Pixel>();
+            
             for (int i = 0; i < vertices.Count; i++)
             {
                 var start = vertices[i];
@@ -709,11 +843,15 @@ namespace KGLaba3
             Console.WriteLine("Diff A B " + diff3.Count);
             for (int i = 0; i < diff3.Count; i++)
             {
-                diff4[i].color = Color.FromArgb( 255 - diff4[i].color.R, 255 - diff4[i].color.G, 255 - diff4[i].color.B);
+                diff4[i].color = Color.FromArgb(255 - diff4[i].color.R, 255 - diff4[i].color.G, 255 - diff4[i].color.B);
                 paintPixels(pictureBox2.CreateGraphics(), [diff4[i]]);
             }
         }
 
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 
 
