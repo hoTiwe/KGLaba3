@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using static System.Net.Mime.MediaTypeNames;
 using System.Threading;
 using System.Windows.Forms.VisualStyles;
+using System.Text;
 
 namespace KGLaba3
 {
@@ -799,6 +800,61 @@ namespace KGLaba3
                 timer1.Interval = speed;
             }
         }
+
+        private void writeJson(PictureBox pictureBox, List<Pixel> pixels)
+        {
+            HashSet<Pixel> pixelsSet = new HashSet<Pixel>();
+            for (int i = 0; i < pixels.Count; i++)
+            {
+                pixelsSet.Add(pixels[pixels.Count - 1 - i]);
+            }
+            List<Pixel> pixelsUnique = pixelsSet.ToList();
+
+            FileStream writeStream = new FileStream("../../../output.json", FileMode.Create);
+            string outJson = "{\n\t";
+            outJson += $"\"width\": {pictureBox.Width},\n\t";
+            outJson += $"\"height\": {pictureBox.Height},\n\t";
+            outJson += $"\"backgroundColor\": " + "{\n\t\t";
+            outJson += $"\"aplha\": {pictureBox.BackColor.A},\n\t\t";
+            outJson += $"\"red\": {pictureBox.BackColor.R},\n\t\t";
+            outJson += $"\"green\": {pictureBox.BackColor.G},\n\t\t";
+            outJson += $"\"blue\": {pictureBox.BackColor.B}\n\t" + "},\n\t";
+
+            outJson += $"\"scale\": {scale},\n\t";
+            outJson += $"\"pixels\": [";
+
+            for (int i = 0; i < pixelsUnique.Count; i++)
+            {
+                outJson += "\n\t\t{\n\t\t\t\"x\": " + pixelsUnique[i].x + ",";
+                outJson += "\n\t\t\t\"y\": " + pixelsUnique[i].y + ",";
+                outJson += "\n\t\t\t\"color\": {\n\t\t\t\t";
+                outJson += $"\"aplha\": {pixelsUnique[i].color.A},\n\t\t\t\t";
+                outJson += $"\"red\": {pixelsUnique[i].color.R},\n\t\t\t\t";
+                outJson += $"\"green\": {pixelsUnique[i].color.G},\n\t\t\t\t";
+                outJson += $"\"blue\": {pixelsUnique[i].color.B}\n\t\t\t" + "}\n\t\t}";
+                if (i != pixelsUnique.Count - 1) outJson += ',';
+                else outJson += "\n\t";
+            }
+            outJson += "]\n}";
+
+            writeStream.Write(Encoding.Default.GetBytes(outJson));
+            writeStream.Close();
+        }
+        private void button2_Click(object sender, EventArgs e)
+        {
+            writeJson(pictureBox1, pixelsA);
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            writeJson(pictureBox2, pixelsB);
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            writeJson(pictureBox3, pixelsC);
+        }
+
     }
 
 
