@@ -16,6 +16,8 @@ namespace KGLaba3
         int scale = 10;
         int offsetX = 20, offsetY = 10;
 
+        int punctirLine = 1;
+
         double totalTimeA = 0;
         double totalTimeB = 0;
         double totalTimeC = 0;
@@ -30,12 +32,21 @@ namespace KGLaba3
             InitializeComponent();
         }
 
-        void paintPixels(Graphics graphics, List<Pixel> pixels)
+        int pixelCounterA = 0;
+
+        void paintPixels(Graphics graphics, List<Pixel> pixels, int countConture = 0)
         {
             for (int i = 0; i < pixels.Count(); i++)
             {
                 SolidBrush color = new SolidBrush(pixels[i].color);
-                graphics.FillRectangle(color, (pixels[i].x + offsetX) * scale, 400 - (pixels[i].y + offsetY) * scale, 1 * scale, 1 * scale);
+                if (i < countConture && i % (punctirLine + 1) != 0 || i >= countConture)
+                {
+                    graphics.FillRectangle(color, (pixels[i].x + offsetX) * scale, 400 - (pixels[i].y + offsetY) * scale, 1 * scale, 1 * scale);
+
+                }
+                if (i >= countConture)
+                {
+                }
             }
         }
 
@@ -100,7 +111,7 @@ namespace KGLaba3
                     new List<double> { 26.83, 116.57, },
                 },
                 new Pixel(-3 * 4, 2 * 4, Color.Green));
-            paintPixels(graphicsA, figure1);
+            paintPixels(graphicsA, figure1, pixelCounterA);
             
             var figure2 = GetPixelsA(new List<List<double>> {
                     new List<double> { 10, 180 },
@@ -109,7 +120,7 @@ namespace KGLaba3
                     new List<double> { 2, 0 },
                 },
                 new Pixel(-4, 4, Color.Orange));
-            paintPixels(graphicsA, figure2);
+            paintPixels(graphicsA, figure2, pixelCounterA);
 
             var figure3 = GetPixelsA(new List<List<double>> {
                 new List<double> { 10, 90 },
@@ -121,7 +132,7 @@ namespace KGLaba3
                 new List<double> { 6.32, 108.43 },
                 },
                 new Pixel(-4, 8, Color.LightGoldenrodYellow));
-            paintPixels(graphicsA, figure3);
+            paintPixels(graphicsA, figure3, pixelCounterA);
 
             var figure4 = GetPixelsA(new List<List<double>> {
                 new List<double> { 11.66, 149.04 },
@@ -129,7 +140,7 @@ namespace KGLaba3
                 new List<double> { 6.32, 71.57 },
                 },
                 new Pixel(-4, 8, Color.Red));
-            paintPixels(graphicsA, figure4);
+            paintPixels(graphicsA, figure4, pixelCounterA);
 
             var figure5 = GetPixelsA(new List<List<double>> {
                 new List<double> { 6.32, 161.57 },
@@ -138,7 +149,7 @@ namespace KGLaba3
                 new List<double> { 4.47, 153.43 },
                 },
                 new Pixel(-5, 3, Color.Yellow));
-            paintPixels(graphicsA, figure5);
+            paintPixels(graphicsA, figure5, pixelCounterA);
 
             var figure6 = GetPixelsA(new List<List<double>> {
                 new List<double> { 2, 180 },
@@ -147,22 +158,22 @@ namespace KGLaba3
                 new List<double> { 0, 0 },
                 },
                 new Pixel(-1, 2, Color.SaddleBrown));
-            paintPixels(graphicsA, figure6);
+            paintPixels(graphicsA, figure6, pixelCounterA);
 
             var line1 = PaintLineMain( 12, 180, 20, 126.87, Color.Black);
-            paintPixels(graphicsA, line1);
+            paintPixels(graphicsA, line1, pixelCounterA);
 
             var line2 = PaintLineMain(13.42, 153.43, 12.81, 141.34, Color.Black);
             line2.AddRange(
                 PaintLineMain(13.42, 153.43, 16.12, 150.26, Color.Black)
             );
-            paintPixels(graphicsA, line2);
+            paintPixels(graphicsA, line2, pixelCounterA);
 
             var line3 = PaintLineMain(14.42, 146.31, 14.14, 135, Color.Black);
             line3.AddRange(
                 PaintLineMain(14.42, 146.31, 17.20, 144.46, Color.Black)
             );
-            paintPixels(graphicsA, line3);
+            paintPixels(graphicsA, line3, pixelCounterA);
 
             label1.Text = statsA + $"Всего веремени: {totalTimeA} ms.\n";
         }
@@ -371,7 +382,6 @@ namespace KGLaba3
             statsA += $"Прямая ({r1}; {p1}) ({r2}; {p2}) или ({x1}; {y1}) - ({x2}; {y2}): {stopwatch.Elapsed.TotalMilliseconds} ms.\n";
             totalTimeA += stopwatch.Elapsed.TotalMilliseconds;
             pixelsA.AddRange(pixels);
-
             return pixels;
         }
 
@@ -646,7 +656,7 @@ namespace KGLaba3
 
             var allPixels = contourPixels.ToList();
             allPixels.AddRange(filledPixels);
-
+            pixelCounterA = contourPixels.Count;
             return allPixels;
         }
 
