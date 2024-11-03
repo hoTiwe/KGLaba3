@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             pictureBox1 = new PictureBox();
             pictureBox2 = new PictureBox();
             pictureBox3 = new PictureBox();
@@ -35,6 +36,7 @@
             label2 = new Label();
             label3 = new Label();
             button1 = new Button();
+            timer1 = new System.Windows.Forms.Timer(components);
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
@@ -49,7 +51,6 @@
             pictureBox1.Size = new Size(400, 400);
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
-            pictureBox1.Paint += PictureBox1_Paint;
             // 
             // pictureBox2
             // 
@@ -60,7 +61,6 @@
             pictureBox2.Size = new Size(400, 400);
             pictureBox2.TabIndex = 1;
             pictureBox2.TabStop = false;
-            pictureBox2.Paint += PictureBox2_Paint;
             // 
             // pictureBox3
             // 
@@ -71,7 +71,6 @@
             pictureBox3.Size = new Size(400, 400);
             pictureBox3.TabIndex = 2;
             pictureBox3.TabStop = false;
-            pictureBox3.Paint += PictureBox3_Paint;
             // 
             // label1
             // 
@@ -109,9 +108,15 @@
             button1.Name = "button1";
             button1.Size = new Size(75, 23);
             button1.TabIndex = 8;
-            button1.Text = "button1";
+            button1.Text = "Сравнить";
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
+            // 
+            // timer1
+            // 
+            timer1.Enabled = true;
+            timer1.Interval = 10;
+            timer1.Tick += timer1_Tick;
             // 
             // Form1
             // 
@@ -143,5 +148,6 @@
         private Label label2;
         private Label label3;
         private Button button1;
+        private System.Windows.Forms.Timer timer1;
     }
 }
