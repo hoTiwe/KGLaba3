@@ -51,7 +51,7 @@ namespace KGLaba3
         void paintPixel(Graphics grap, Pixel pixel)
         {
             SolidBrush color = new SolidBrush(pixel.color);
-            grap.FillRectangle(color, (pixel.x + offsetX) * scale, 400 - (pixel.y - offsetY) * scale, 1 * scale - coeffNet, 1 * scale - coeffNet);
+            if (pixel.needPaint) grap.FillRectangle(color, (pixel.x + offsetX) * scale, 400 - (pixel.y - offsetY) * scale, 1 * scale - coeffNet, 1 * scale - coeffNet);
         }
 
         void clearPictureBox(Graphics grap, PictureBox p)
@@ -159,7 +159,6 @@ namespace KGLaba3
                 clearPictureBox(graphicsC, pictureBox3);
                 paintedC = 0;
             }
-            return result.ToList();
         }
 
         int CalculateDiff(Bitmap b1, Bitmap b2, bool needChange = false)
@@ -240,6 +239,11 @@ namespace KGLaba3
             label1.Text += $"Прямая ({Math.Round(polar[0], 2)}; {Math.Round(polar[1], 2)}) - ({Math.Round(r2, 2)}; {Math.Round(p, 2)})  ({x1}; {y1}) - ({x2}; {y2}): {stopwatch.Elapsed.TotalMilliseconds} ms.\n";
             totalTimeA += stopwatch.Elapsed.TotalMilliseconds;
 
+            List<Pixel> result = pixels.ToList();
+            for (int i = 0; i < result.Count; i++)
+            {
+                if (i % (punctirLine + 1) == 0) result[i].needPaint = false;
+            }
             return pixels.ToList();
         }
 
@@ -512,7 +516,6 @@ namespace KGLaba3
 
             var allPixels = contourPixels.ToList();
             allPixels.AddRange(filledPixels);
-            pixelCounterA = contourPixels.Count;
             return allPixels;
         }
 
@@ -526,6 +529,11 @@ namespace KGLaba3
                 var start = vertices[i];
                 var end = vertices[(i + 1) % vertices.Count];
                 contourPixels.UnionWith(PaintLineCDA(start.x, start.y, end.x, end.y, start.color));
+            }
+            List<Pixel> paint = contourPixels.ToList();
+            for (int i = 0; i < paint.Count; i++)
+            {
+                if (i % (punctirLine + 1) == 0) paint[i].needPaint = false;
             }
 
             List<Pixel> filledPixels = FillB(contourPixels, seedPixel);
@@ -545,7 +553,11 @@ namespace KGLaba3
                 var end = vertices[(i + 1) % vertices.Count];
                 contourPixels.UnionWith(PaintLineBrezenthema(start.x, start.y, end.x, end.y, start.color));
             }
-
+            List<Pixel> paint = contourPixels.ToList();
+            for (int i = 0; i < paint.Count; i++)
+            {
+                if (i % (punctirLine + 1) == 0) paint[i].needPaint = false;
+            }
             List<Pixel> filledPixels = FillC(contourPixels, seedPixel);
 
             var allPixels = contourPixels.ToList();
@@ -802,19 +814,42 @@ namespace KGLaba3
                 timer1.Interval = speed;
             }
         }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            if (int.TryParse(textBox5.Text, out int count))
+            {
+                punctirLine = count;
+                pixelsA.Clear();
+                pixelsB.Clear();
+                pixelsC.Clear();
+                label1.Text = label2.Text = label3.Text = "";
+                getPixelsA();
+                getPixelsB();
+                getPixelsC();
+                clearPictureBox(graphicsA, pictureBox1);
+                paintedA = 0;
+                clearPictureBox(graphicsB, pictureBox2);
+                paintedB = 0;
+                clearPictureBox(graphicsC, pictureBox3);
+                paintedC = 0;
+            }
+        }
     }
 
 
     public class Pixel
         {
         public int x, y;
+        public bool needPaint;
         public Color color;
 
-        public Pixel(int x, int y, Color color)
+        public Pixel(int x, int y, Color color, bool needPaint = true)
         {
             this.x = x;
             this.y = y;
             this.color = color;
+            this.needPaint = needPaint;
         }
 
         public Pixel(Pixel p)

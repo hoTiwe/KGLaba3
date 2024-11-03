@@ -49,6 +49,9 @@
             textBox4 = new TextBox();
             Задержка = new Label();
             button4 = new Button();
+            label6 = new Label();
+            button5 = new Button();
+            textBox5 = new TextBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
@@ -247,11 +250,43 @@
             button4.UseVisualStyleBackColor = true;
             button4.Click += button4_Click;
             // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(1301, 471);
+            label6.Name = "label6";
+            label6.Size = new Size(54, 15);
+            label6.TabIndex = 23;
+            label6.Text = "Пунктир";
+            // 
+            // button5
+            // 
+            button5.Location = new Point(1307, 525);
+            button5.Margin = new Padding(3, 2, 3, 2);
+            button5.Name = "button5";
+            button5.Size = new Size(82, 22);
+            button5.TabIndex = 22;
+            button5.Text = "Обновить";
+            button5.UseVisualStyleBackColor = true;
+            button5.Click += button5_Click;
+            // 
+            // textBox5
+            // 
+            textBox5.Location = new Point(1301, 488);
+            textBox5.Margin = new Padding(3, 2, 3, 2);
+            textBox5.Name = "textBox5";
+            textBox5.Size = new Size(110, 23);
+            textBox5.TabIndex = 21;
+            textBox5.Text = "1";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1435, 791);
+            Controls.Add(label6);
+            Controls.Add(button5);
+            Controls.Add(textBox5);
             Controls.Add(button4);
             Controls.Add(Задержка);
             Controls.Add(textBox4);
@@ -302,5 +337,8 @@
         private TextBox textBox4;
         private Label Задержка;
         private Button button4;
+        private Label label6;
+        private Button button5;
+        private TextBox textBox5;
     }
 }
