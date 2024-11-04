@@ -59,9 +59,18 @@
             button6 = new Button();
             button7 = new Button();
             button8 = new Button();
+            scrollPanelA = new Panel();
+            displayTextBoxA = new TextBox();
+            scrollPanelB = new Panel();
+            displayTextBoxB = new TextBox();
+            scrollPanelC = new Panel();
+            displayTextBoxC = new TextBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
+            scrollPanelA.SuspendLayout();
+            scrollPanelB.SuspendLayout();
+            scrollPanelC.SuspendLayout();
             SuspendLayout();
             // 
             // pictureBox1
@@ -98,32 +107,32 @@
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 8F);
-            label1.Location = new Point(12, 430);
+            label1.Location = new Point(14, 573);
             label1.Name = "label1";
-            label1.Size = new Size(0, 13);
+            label1.Size = new Size(0, 19);
             label1.TabIndex = 5;
             // 
             // label2
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 8F);
-            label2.Location = new Point(446, 430);
+            label2.Location = new Point(510, 573);
             label2.Name = "label2";
-            label2.Size = new Size(0, 13);
+            label2.Size = new Size(0, 19);
             label2.TabIndex = 6;
             // 
             // label3
             // 
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 8F);
-            label3.Location = new Point(884, 430);
+            label3.Location = new Point(1010, 573);
             label3.Name = "label3";
-            label3.Size = new Size(0, 13);
+            label3.Size = new Size(0, 19);
             label3.TabIndex = 7;
             // 
             // button1
             // 
-            button1.Location = new Point(1325, 577);
+            button1.Location = new Point(1325, 425);
             button1.Name = "button1";
             button1.Size = new Size(75, 23);
             button1.TabIndex = 8;
@@ -259,7 +268,7 @@
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(1318, 397);
+            label6.Location = new Point(1304, 474);
             label6.Name = "label6";
             label6.Size = new Size(14, 15);
             label6.TabIndex = 21;
@@ -268,7 +277,7 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(1353, 397);
+            label7.Location = new Point(1344, 475);
             label7.Name = "label7";
             label7.Size = new Size(14, 15);
             label7.TabIndex = 22;
@@ -277,7 +286,7 @@
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(1394, 397);
+            label8.Location = new Point(1380, 475);
             label8.Name = "label8";
             label8.Size = new Size(16, 15);
             label8.TabIndex = 23;
@@ -285,36 +294,37 @@
             // 
             // textBox5
             // 
-            textBox5.Location = new Point(1307, 420);
+            textBox5.Location = new Point(1304, 492);
             textBox5.Margin = new Padding(3, 2, 3, 2);
             textBox5.Name = "textBox5";
-            textBox5.Size = new Size(33, 23);
+            textBox5.Size = new Size(29, 23);
             textBox5.TabIndex = 24;
             textBox5.Text = "20";
             // 
             // textBox6
             // 
-            textBox6.Location = new Point(1346, 420);
+            textBox6.Location = new Point(1338, 492);
             textBox6.Margin = new Padding(3, 2, 3, 2);
             textBox6.Name = "textBox6";
-            textBox6.Size = new Size(33, 23);
+            textBox6.Size = new Size(29, 23);
             textBox6.TabIndex = 25;
             textBox6.Text = "20";
             // 
             // textBox7
             // 
-            textBox7.Location = new Point(1385, 420);
+            textBox7.Location = new Point(1372, 492);
             textBox7.Margin = new Padding(3, 2, 3, 2);
             textBox7.Name = "textBox7";
-            textBox7.Size = new Size(33, 23);
+            textBox7.Size = new Size(29, 23);
             textBox7.TabIndex = 26;
             textBox7.Text = "20";
             // 
             // button5
             // 
-            button5.Location = new Point(1343, 490);
+            button5.Location = new Point(1335, 553);
+            button5.Margin = new Padding(3, 2, 3, 2);
             button5.Name = "button5";
-            button5.Size = new Size(36, 23);
+            button5.Size = new Size(32, 28);
             button5.TabIndex = 27;
             button5.Text = "B";
             button5.UseVisualStyleBackColor = true;
@@ -322,9 +332,10 @@
             // 
             // button6
             // 
-            button6.Location = new Point(1343, 519);
+            button6.Location = new Point(1335, 585);
+            button6.Margin = new Padding(3, 2, 3, 2);
             button6.Name = "button6";
-            button6.Size = new Size(36, 23);
+            button6.Size = new Size(32, 31);
             button6.TabIndex = 28;
             button6.Text = "R";
             button6.UseVisualStyleBackColor = true;
@@ -332,9 +343,10 @@
             // 
             // button7
             // 
-            button7.Location = new Point(1343, 461);
+            button7.Location = new Point(1335, 523);
+            button7.Margin = new Padding(3, 2, 3, 2);
             button7.Name = "button7";
-            button7.Size = new Size(36, 23);
+            button7.Size = new Size(32, 26);
             button7.TabIndex = 29;
             button7.Text = "D";
             button7.UseVisualStyleBackColor = true;
@@ -342,13 +354,71 @@
             // 
             // button8
             // 
-            button8.Location = new Point(1343, 548);
+            button8.Location = new Point(1335, 620);
+            button8.Margin = new Padding(3, 2, 3, 2);
             button8.Name = "button8";
-            button8.Size = new Size(36, 23);
+            button8.Size = new Size(32, 24);
             button8.TabIndex = 30;
             button8.Text = "J";
             button8.UseVisualStyleBackColor = true;
             button8.Click += button6_Click;
+            // 
+            // scrollPanelA
+            // 
+            scrollPanelA.AutoScroll = true;
+            scrollPanelA.Controls.Add(displayTextBoxA);
+            scrollPanelA.Location = new Point(12, 425);
+            scrollPanelA.Name = "scrollPanelA";
+            scrollPanelA.Size = new Size(400, 300);
+            scrollPanelA.TabIndex = 21;
+            // 
+            // displayTextBoxA
+            // 
+            displayTextBoxA.Location = new Point(0, 0);
+            displayTextBoxA.Margin = new Padding(3, 2, 3, 2);
+            displayTextBoxA.Multiline = true;
+            displayTextBoxA.Name = "displayTextBoxA";
+            displayTextBoxA.ScrollBars = ScrollBars.Vertical;
+            displayTextBoxA.Size = new Size(389, 488);
+            displayTextBoxA.TabIndex = 0;
+            // 
+            // scrollPanelB
+            // 
+            scrollPanelB.AutoScroll = true;
+            scrollPanelB.Controls.Add(displayTextBoxB);
+            scrollPanelB.Location = new Point(446, 425);
+            scrollPanelB.Name = "scrollPanelB";
+            scrollPanelB.Size = new Size(400, 300);
+            scrollPanelB.TabIndex = 21;
+            // 
+            // displayTextBoxB
+            // 
+            displayTextBoxB.Location = new Point(0, 0);
+            displayTextBoxB.Margin = new Padding(3, 2, 3, 2);
+            displayTextBoxB.Multiline = true;
+            displayTextBoxB.Name = "displayTextBoxB";
+            displayTextBoxB.ScrollBars = ScrollBars.Vertical;
+            displayTextBoxB.Size = new Size(394, 488);
+            displayTextBoxB.TabIndex = 0;
+            // 
+            // scrollPanelC
+            // 
+            scrollPanelC.AutoScroll = true;
+            scrollPanelC.Controls.Add(displayTextBoxC);
+            scrollPanelC.Location = new Point(884, 425);
+            scrollPanelC.Name = "scrollPanelC";
+            scrollPanelC.Size = new Size(400, 300);
+            scrollPanelC.TabIndex = 21;
+            // 
+            // displayTextBoxC
+            // 
+            displayTextBoxC.Location = new Point(0, 0);
+            displayTextBoxC.Margin = new Padding(3, 2, 3, 2);
+            displayTextBoxC.Multiline = true;
+            displayTextBoxC.Name = "displayTextBoxC";
+            displayTextBoxC.ScrollBars = ScrollBars.Vertical;
+            displayTextBoxC.Size = new Size(394, 488);
+            displayTextBoxC.TabIndex = 0;
             // 
             // Form1
             // 
@@ -378,17 +448,23 @@
             Controls.Add(checkBox1);
             Controls.Add(button2);
             Controls.Add(button1);
-            Controls.Add(label3);
-            Controls.Add(label2);
-            Controls.Add(label1);
             Controls.Add(pictureBox3);
             Controls.Add(pictureBox2);
             Controls.Add(pictureBox1);
+            Controls.Add(scrollPanelA);
+            Controls.Add(scrollPanelB);
+            Controls.Add(scrollPanelC);
             Name = "Form1";
             Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
+            scrollPanelA.ResumeLayout(false);
+            scrollPanelA.PerformLayout();
+            scrollPanelB.ResumeLayout(false);
+            scrollPanelB.PerformLayout();
+            scrollPanelC.ResumeLayout(false);
+            scrollPanelC.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -398,6 +474,9 @@
         private PictureBox pictureBox1;
         private PictureBox pictureBox2;
         private PictureBox pictureBox3;
+        private Panel scrollPanelA;
+        private Panel scrollPanelB;
+        private Panel scrollPanelC;
         private Label label1;
         private Label label2;
         private Label label3;
@@ -413,6 +492,9 @@
         private Label label4;
         private Label label5;
         private TextBox textBox4;
+        private TextBox displayTextBoxA;
+        private TextBox displayTextBoxB;
+        private TextBox displayTextBoxC;
         private Label Задержка;
         private Button button4;
         private Label label6;
