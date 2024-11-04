@@ -59,14 +59,13 @@ namespace KGLaba3
 
         void paintX(Graphics graphics)
         {
-            int x = offsetX * scale;
-            int y = pictureBox1.Height + (offsetY) * scale;
+            int y = pictureBox1.Height + (offsetY + 1) * scale - 1;
             graphics.FillRectangle(new SolidBrush(Color.Black), 0, y, pictureBox1.Width, 2);
         }
 
         void paintY(Graphics graphics)
         {
-            int x = offsetX * scale - scale + 2;
+            int x = (offsetX + 1) * scale - 1;
             graphics.FillRectangle(new SolidBrush(Color.Black), x, 0, 2, pictureBox1.Height);
         }
 
@@ -830,50 +829,49 @@ namespace KGLaba3
             }
         }
         private void button2_Click(object sender, EventArgs e)
-        {
+        { // D
             int x = Int32.Parse(textBox5.Text);
             int y = Int32.Parse(textBox6.Text);
             int H = Int32.Parse(textBox7.Text);
             pixelsA.Clear();
             paintedA = 0;
-            pixelsA = PaintLineBrezenthema(x, y, x, y - H, Color.Black);
-            pixelsA.AddRange(DrawPartCircle(x, y - H / 2, H / 2));
+            pixelsA = PaintLineBrezenthema(x - H / 4, y - H / 2, x - H / 4, y + H / 2, Color.Black);
+            pixelsA.AddRange(DrawPartCircle(x - H / 4, y, H / 2));
         }
 
         private void button3_Click(object sender, EventArgs e)
-        {
+        { // B
             int x = Int32.Parse(textBox5.Text);
             int y = Int32.Parse(textBox6.Text);
             int H = Int32.Parse(textBox7.Text);
             pixelsA.Clear();
             paintedA = 0;
-            pixelsA = PaintLineBrezenthema(x, y, x, y - H, Color.Black);
-            pixelsA.AddRange(DrawPartCircle(x, y - H / 4, H / 4));
-            pixelsA.AddRange(DrawPartCircle(x, y - H * 3 / 4, H / 4));
+            pixelsA = PaintLineBrezenthema(x - H / 8, y + H / 2, x - H / 8, y - H / 2, Color.Black);
+            pixelsA.AddRange(DrawPartCircle(x - H / 8, y + H / 4, H / 4));
+            pixelsA.AddRange(DrawPartCircle(x - H / 8, y - H / 4, H / 4 + H % 2));
         }
 
         private void button5_Click(object sender, EventArgs e)
-        {
+        { // R
             int x = Int32.Parse(textBox5.Text);
             int y = Int32.Parse(textBox6.Text);
             int H = Int32.Parse(textBox7.Text);
             pixelsA.Clear();
             paintedA = 0;
-            pixelsA = PaintLineBrezenthema(x, y, x, y - H, Color.Black);
-            pixelsA.AddRange(DrawPartCircle(x, y - H / 4, H / 4));
-            pixelsA.AddRange(PaintLineBrezenthema(x, y - H / 2 + 1, x + H / 4, y - H, Color.Black));
+            pixelsA = PaintLineBrezenthema(x - H / 8, y + H / 2, x - H / 8, y - H / 2, Color.Black);
+            pixelsA.AddRange(DrawPartCircle(x - H / 8, y + H / 4, H / 4 + H % 2));
+            pixelsA.AddRange(PaintLineBrezenthema(x - H / 8, y, x + H / 8 +  H % 2, y - H / 2, Color.Black));
         }
 
         private void button6_Click(object sender, EventArgs e)
-        {
+        { // J
             int x = Int32.Parse(textBox5.Text);
             int y = Int32.Parse(textBox6.Text);
             int H = Int32.Parse(textBox7.Text);
             pixelsA.Clear();
             paintedA = 0;
-            pixelsA = PaintLineBrezenthema(x, y, x, y - H * 3 / 4, Color.Black);
-
-            pixelsA.AddRange(DrawPartCircle(x - H / 4, y - H * 3 / 4, H / 4, false, true));
+            pixelsA = PaintLineBrezenthema(x + H / 4, y + H / 2,  x + H / 4, y - H / 4, Color.Black);
+            pixelsA.AddRange(DrawPartCircle(x, y - H / 4, H / 4, false, true));
         }
 
     }
