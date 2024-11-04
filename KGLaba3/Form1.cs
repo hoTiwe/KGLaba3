@@ -62,7 +62,7 @@ namespace KGLaba3
             int y = 398 - ( (offsetY) * scale - ( offsetY > 0 ? scale >> 1 : -(scale>> 1))  + coeffNet);
             Console.WriteLine("Y " + y);
             graphics.FillRectangle(new SolidBrush(Color.Black), 0, y, pictureBox1.Width, 2);
-        } 
+        }
 
         void paintY(Graphics graphics)
         {
@@ -90,6 +90,7 @@ namespace KGLaba3
                 MessageBox.Show("Please enter a valid integer for scale.");
             }
         }
+
         private void buttonSetOffset_Click(object sender, EventArgs e)
         {
 
@@ -235,12 +236,14 @@ namespace KGLaba3
             double[] polar = ToPolar(x1, y1);
 
             stopwatch.Stop();
-            label1.Text += $"Прямая ({Math.Round(polar[0], 2)}; {Math.Round(polar[1], 2)}) - ({Math.Round(r2, 2)}; {Math.Round(p, 2)})  ({x1}; {y1}) - ({x2}; {y2}): {stopwatch.Elapsed.TotalMilliseconds} ms.\n";
+            //label1.Text += $"Прямая ({Math.Round(polar[0], 2)}; {Math.Round(polar[1], 2)}) - ({Math.Round(r2, 2)}; {Math.Round(p, 2)})  ({x1}; {y1}) - ({x2}; {y2}): {stopwatch.Elapsed.TotalMilliseconds} ms.\n";
             totalTimeA += stopwatch.Elapsed.TotalMilliseconds;
+            displayTextBoxA.AppendText($"Прямая ({Math.Round(polar[0], 2)}; {Math.Round(polar[1], 2)}) - ({Math.Round(r2, 2)}; {Math.Round(p, 2)})  ({x1}; {y1}) - ({x2}; {y2}) {Environment.NewLine}");
+            displayTextBoxA.AppendText($"{stopwatch.Elapsed.TotalMilliseconds} ms. {Environment.NewLine}");
+
 
             return pixels.ToList();
         }
-
 
         List<Pixel> PaintLineCDA(int x1, int y1, int x2, int y2, Color color)
         {
@@ -265,9 +268,11 @@ namespace KGLaba3
             }
 
             stopwatch.Stop();
-            label2.Text += $"Прямая с координатами ({x1}; {y1}) - ({x2}; {y2}): {stopwatch.Elapsed.TotalMilliseconds} ms.\n";
+            //label2.Text += $"Прямая с координатами ({x1}; {y1}) - ({x2}; {y2}): {stopwatch.Elapsed.TotalMilliseconds} ms.\n";
+            displayTextBoxB.AppendText($"Прямая с координатами ({x1}; {y1}) - ({x2}; {y2}): {stopwatch.Elapsed.TotalMilliseconds} ms.{Environment.NewLine}");
             double res = Math.Sqrt(Math.Pow(x2 - x1, 2) + Math.Pow(y2 - y1, 2));
-            label2.Text += $"Расстояние = {res}\n";
+            //label2.Text += $"Расстояние = {res}\n";
+            displayTextBoxB.AppendText($"Расстояние = {res} {Environment.NewLine}");
             totalTimeB += stopwatch.Elapsed.TotalMilliseconds;
 
             return pixels;
@@ -308,7 +313,8 @@ namespace KGLaba3
                 }
             }
             stopwatch.Stop();
-            label3.Text += $"Прямая с координатами ({x1}; {y1}) - ({x2}; {y2}): {stopwatch.Elapsed.TotalMilliseconds} ms.\n";
+            //label3.Text += $"Прямая с координатами ({x1}; {y1}) - ({x2}; {y2}): {stopwatch.Elapsed.TotalMilliseconds} ms.\n";
+            displayTextBoxC.AppendText($"Прямая с координатами ({x1}; {y1}) - ({x2}; {y2}): {stopwatch.Elapsed.TotalMilliseconds} ms.{Environment.NewLine}");
             totalTimeC += stopwatch.Elapsed.TotalMilliseconds;
 
             return pixels;
@@ -375,7 +381,8 @@ namespace KGLaba3
                 }
             }
             stopwatch.Stop();
-            label1.Text += $"Закраска области: {stopwatch.Elapsed.TotalMilliseconds} ms.\n";
+            //label1.Text += $"Закраска области: {stopwatch.Elapsed.TotalMilliseconds} ms.\n";
+            displayTextBoxA.AppendText($"Закраска области: {stopwatch.Elapsed.TotalMilliseconds} ms.{Environment.NewLine}");
             totalTimeA += stopwatch.Elapsed.TotalMilliseconds;
 
             return insidePixels; // Возвращаем множество точек, которые необходимо закрасить
@@ -415,6 +422,7 @@ namespace KGLaba3
 
             stopwatch.Stop();
             label2.Text += $"Закраска области: {stopwatch.Elapsed.TotalMilliseconds} ms.\n";
+            displayTextBoxB.AppendText($"Закраска области: {stopwatch.Elapsed.TotalMilliseconds} ms.{Environment.NewLine}");
             totalTimeB += stopwatch.Elapsed.TotalMilliseconds;
 
             return filledPixels;
@@ -491,13 +499,15 @@ namespace KGLaba3
             }
 
             stopwatch.Stop();
-            label3.Text += $"Закраска области: {stopwatch.Elapsed.TotalMilliseconds} ms.\n";
+            //label3.Text += $"Закраска области: {stopwatch.Elapsed.TotalMilliseconds} ms.\n";
+            displayTextBoxC.AppendText($"Закраска области: {stopwatch.Elapsed.TotalMilliseconds} ms. {Environment.NewLine}");
             totalTimeC += stopwatch.Elapsed.TotalMilliseconds;
 
             return new List<Pixel>(filledPixels);
         }
-        public List<Pixel> GetPixelsFigureA(List<Pixel> vertices, Pixel seedPixel)
+        public List<Pixel> GetPixelsFigureA(List<Pixel> vertices, Pixel seedPixel, String figure)
         {
+            displayTextBoxA.AppendText($"Фигура  {figure}:{Environment.NewLine}");
             var contourPixels = new HashSet<Pixel>();
             for (int i = 0; i < vertices.Count; i++)
             {
@@ -516,7 +526,7 @@ namespace KGLaba3
 
         public List<Pixel> GetPixelsFigureB(List<Pixel> vertices, Pixel seedPixel, String figure)
         {
-            label2.Text += $"Фигура  {figure}: ";
+            displayTextBoxB.AppendText($"Фигура  {figure}:{Environment.NewLine}");
             var contourPixels = new HashSet<Pixel>();
 
             for (int i = 0; i < vertices.Count; i++)
@@ -534,8 +544,9 @@ namespace KGLaba3
             return allPixels;
         }
 
-        public List<Pixel> GetPixelsFigureC(List<Pixel> vertices, Pixel seedPixel)
+        public List<Pixel> GetPixelsFigureC(List<Pixel> vertices, Pixel seedPixel, String figure)
         {
+            displayTextBoxC.AppendText($"Фигура  {figure}:{Environment.NewLine}");
             var contourPixels = new HashSet<Pixel>();
             for (int i = 0; i < vertices.Count; i++)
             {
@@ -555,12 +566,12 @@ namespace KGLaba3
         private void button1_Click(object sender, EventArgs e)
         {
             int diff1 = CalculateDiff(bitmapA, bitmapC);
-            label1.Text += $"I = {diff1}\nm = {(double)diff1 / (pictureBox2.Width / scale * pictureBox2.Height / scale)}\n";
-
+            label1.Text += $"I = {diff1 / (scale*scale)}\nm = {(double)diff1 / (pictureBox2.Width / scale * pictureBox2.Height / scale)}\n";
+            displayTextBoxA.AppendText($"I = {diff1 / (scale * scale)}{Environment.NewLine}m = {(double)diff1 / (pictureBox2.Width / scale * pictureBox2.Height / scale)}{Environment.NewLine}");
             int diff2 = CalculateDiff(bitmapB, bitmapC);
 
-            label2.Text += $"I = {diff2}\nm = {(double)diff2 / (pictureBox2.Width / scale * pictureBox2.Height / scale)}\n";
-
+            label2.Text += $"I = {diff2 / (scale * scale)}\nm = {(double)diff2 / (pictureBox2.Width / scale * pictureBox2.Height / scale)}\n";
+            displayTextBoxB.AppendText($"I = {diff2 / (scale * scale)}{Environment.NewLine}m = {(double)diff2 / (pictureBox2.Width / scale * pictureBox2.Height / scale)}{Environment.NewLine}");
             CalculateDiff(bitmapA, bitmapB, true);
         }
 
@@ -572,7 +583,7 @@ namespace KGLaba3
                     new Pixel(-8, 4, Color.Green),
                     new Pixel(-12, 24, Color.Green),
                },
-                new Pixel(-3 * 4, 2 * 4, Color.Green)));
+                new Pixel(-3 * 4, 2 * 4, Color.Green), "Треугольник (1)"));
 
             pixelsA.AddRange(GetPixelsFigureA(
                 new List<Pixel> {
@@ -581,7 +592,7 @@ namespace KGLaba3
                     new Pixel(2, 6, Color.Orange),
                     new Pixel(2, 0, Color.Orange),
                 },
-                new Pixel(-4, 4, Color.Orange)));
+                new Pixel(-4, 4, Color.Orange), "Прямоугольник (2)"));
 
 
             pixelsA.AddRange(GetPixelsFigureA(
@@ -594,7 +605,7 @@ namespace KGLaba3
                 new Pixel(-4, 6, Color.LightGoldenrodYellow),
                 new Pixel(-2, 6, Color.LightGoldenrodYellow),
                 },
-                new Pixel(-4, 8, Color.LightGoldenrodYellow)));
+                new Pixel(-4, 8, Color.LightGoldenrodYellow), "Семиугольник (3)"));
 
             pixelsA.AddRange(GetPixelsFigureA(
                 new List<Pixel> {
@@ -602,7 +613,7 @@ namespace KGLaba3
                 new Pixel(-4, 10, Color.Red),
                 new Pixel(2, 6, Color.Red),
                 },
-                new Pixel(-4, 8, Color.Red)));
+                new Pixel(-4, 8, Color.Red), "Треугольник (4)"));
 
             pixelsA.AddRange(GetPixelsFigureA(
                 new List<Pixel> {
@@ -611,7 +622,7 @@ namespace KGLaba3
                 new Pixel(-4, 4, Color.Yellow),
                 new Pixel(-4, 2, Color.Yellow),
                 },
-                new Pixel(-5, 3, Color.Yellow)));
+                new Pixel(-5, 3, Color.Yellow), "Прямоугольник (5)"));
 
             pixelsA.AddRange(GetPixelsFigureA(
                 new List<Pixel> {
@@ -620,17 +631,21 @@ namespace KGLaba3
                 new Pixel(0, 4, Color.SaddleBrown),
                 new Pixel(0, 0, Color.SaddleBrown),
                 },
-                new Pixel(-1, 2, Color.SaddleBrown)));
+                new Pixel(-1, 2, Color.SaddleBrown), "Прямоугольник (6)"));
 
             pixelsA.AddRange(PaintLineMain(-12, 0, -12, 16, Color.Black));
 
             pixelsA.AddRange(PaintLineMain(-12, 6, -10, 8, Color.Black));
             pixelsA.AddRange(PaintLineMain(-12, 6, -14, 8, Color.Black));
 
+            CalculateAngleBetweenLines(-12, 6, -10, 8, -12, 6, -14, 8, "между 8 и 9 элементом", displayTextBoxA);
+
             pixelsA.AddRange(PaintLineMain(-12, 8, -10, 10, Color.Black));
             pixelsA.AddRange(PaintLineMain(-12, 8, -14, 10, Color.Black));
 
-            label1.Text += $"Всего веремени: {totalTimeA} ms.\n";
+            CalculateAngleBetweenLines(-12, 8, -10, 10, -12, 8, -14, 10, "между 10 и 11 элементом", displayTextBoxA);
+            //label1.Text += $"Всего веремени: {totalTimeA} ms.\n";
+            displayTextBoxA.AppendText($"Всего веремени: {totalTimeA} ms.{Environment.NewLine}");
         }
 
         private void getPixelsB()
@@ -641,7 +656,7 @@ namespace KGLaba3
                     new Pixel(-8, 4, Color.Green),
                     new Pixel(-12, 24, Color.Green),
                 },
-                 new Pixel(-3 * 4, 2 * 4, Color.Green), "Треугольник"));
+                 new Pixel(-3 * 4, 2 * 4, Color.Green), "Треугольник (1)"));
             Console.WriteLine("Pixele green B " + pixelsB.Count);
 
             pixelsB.AddRange(GetPixelsFigureB(
@@ -651,7 +666,7 @@ namespace KGLaba3
                     new Pixel(2, 6, Color.Orange),
                     new Pixel(2, 0, Color.Orange),
                 },
-                new Pixel(-4, 4, Color.Orange), "Прямоугольник"));
+                new Pixel(-4, 4, Color.Orange), "Прямоугольник (2)"));
 
             pixelsB.AddRange(GetPixelsFigureB(
                 new List<Pixel> {
@@ -663,7 +678,7 @@ namespace KGLaba3
                 new Pixel(-4, 6, Color.LightGoldenrodYellow),
                 new Pixel(-2, 6, Color.LightGoldenrodYellow),
                 },
-                new Pixel(-4, 8, Color.LightGoldenrodYellow), "Семиугольник"));
+                new Pixel(-4, 8, Color.LightGoldenrodYellow), "Семиугольник (3)"));
 
             pixelsB.AddRange(GetPixelsFigureB(
                 new List<Pixel> {
@@ -671,7 +686,7 @@ namespace KGLaba3
                 new Pixel(-4, 10, Color.Red),
                 new Pixel(2, 6, Color.Red),
                 },
-                new Pixel(-4, 8, Color.Red), "Треугольник"));
+                new Pixel(-4, 8, Color.Red), "Треугольник (4)"));
 
             pixelsB.AddRange(GetPixelsFigureB(
                 new List<Pixel> {
@@ -680,7 +695,7 @@ namespace KGLaba3
                 new Pixel(-4, 4, Color.Yellow),
                 new Pixel(-4, 2, Color.Yellow),
                 },
-                new Pixel(-5, 3, Color.Yellow), "Прямоугольник"));
+                new Pixel(-5, 3, Color.Yellow), "Прямоугольник (5)"));
 
             pixelsB.AddRange(GetPixelsFigureB(
                 new List<Pixel> {
@@ -689,17 +704,23 @@ namespace KGLaba3
                 new Pixel(0, 4, Color.SaddleBrown),
                 new Pixel(0, 0, Color.SaddleBrown),
                 },
-                new Pixel(-1, 2, Color.SaddleBrown), "Прямоугольник"));
+                new Pixel(-1, 2, Color.SaddleBrown), "Прямоугольник(6)"));
 
             pixelsB.AddRange(PaintLineCDA(-12, 0, -12, 16, Color.Black));
 
             pixelsB.AddRange(PaintLineCDA(-12, 6, -10, 8, Color.Black));
             pixelsB.AddRange(PaintLineCDA(-12, 6, -14, 8, Color.Black));
 
+            CalculateAngleBetweenLines(-12, 6, -10, 8, -12, 6, -14, 8, "между 8 и 9 элементом", displayTextBoxB);
+
             pixelsB.AddRange(PaintLineCDA(-12, 8, -10, 10, Color.Black));
             pixelsB.AddRange(PaintLineCDA(-12, 8, -14, 10, Color.Black));
 
-            label2.Text += $"Всего веремени: {totalTimeB} ms.\n";
+            CalculateAngleBetweenLines(-12, 8, -10, 10, -12, 8, -14, 10, "между 10 и 11 элементом", displayTextBoxB);
+
+
+            //label2.Text += $"Всего веремени: {totalTimeB} ms.\n";
+            displayTextBoxB.AppendText($"Всего веремени: {totalTimeB} ms.{Environment.NewLine}");
         }
 
         private void getPixelsC()
@@ -710,7 +731,7 @@ namespace KGLaba3
                     new Pixel(-8, 4, Color.Green),
                     new Pixel(-12, 24, Color.Green),
                 },
-                 new Pixel(-3 * 4, 2 * 4, Color.Green)));
+                 new Pixel(-3 * 4, 2 * 4, Color.Green), "Треугольник (1)"));
             Console.WriteLine("Pixele green C " + pixelsC.Count);
 
             pixelsC.AddRange(GetPixelsFigureC(
@@ -720,7 +741,7 @@ namespace KGLaba3
                     new Pixel(2, 6, Color.Orange),
                     new Pixel(2, 0, Color.Orange),
                 },
-                new Pixel(-4, 4, Color.Orange)));
+                new Pixel(-4, 4, Color.Orange), "Прямоугольник (2)"));
 
             pixelsC.AddRange(GetPixelsFigureC(
                 new List<Pixel> {
@@ -732,7 +753,7 @@ namespace KGLaba3
                 new Pixel(-4, 6, Color.LightGoldenrodYellow),
                 new Pixel(-2, 6, Color.LightGoldenrodYellow),
                 },
-                new Pixel(-4, 8, Color.LightGoldenrodYellow)));
+                new Pixel(-4, 8, Color.LightGoldenrodYellow), "Семиугольник (3)"));
 
             pixelsC.AddRange(GetPixelsFigureC(
                 new List<Pixel> {
@@ -740,7 +761,7 @@ namespace KGLaba3
                 new Pixel(-4, 10, Color.Red),
                 new Pixel(2, 6, Color.Red),
                 },
-                new Pixel(-4, 8, Color.Red)));
+                new Pixel(-4, 8, Color.Red), "Треугольник (4)"));
 
             pixelsC.AddRange(GetPixelsFigureC(
                 new List<Pixel> {
@@ -749,7 +770,7 @@ namespace KGLaba3
                 new Pixel(-4, 4, Color.Yellow),
                 new Pixel(-4, 2, Color.Yellow),
                 },
-                new Pixel(-5, 3, Color.Yellow)));
+                new Pixel(-5, 3, Color.Yellow), "Прямоугольник (5)"));
 
             pixelsC.AddRange(GetPixelsFigureC(
                 new List<Pixel> {
@@ -758,7 +779,7 @@ namespace KGLaba3
                 new Pixel(0, 4, Color.SaddleBrown),
                 new Pixel(0, 0, Color.SaddleBrown),
                 },
-                new Pixel(-1, 2, Color.SaddleBrown)));
+                new Pixel(-1, 2, Color.SaddleBrown), "Прямоугольник (6)"));
 
             pixelsC.AddRange(PaintLineBrezenthema(-12, 0, -12, 16, Color.Black));
 
@@ -768,7 +789,8 @@ namespace KGLaba3
             pixelsC.AddRange(PaintLineBrezenthema(-12, 8, -10, 10, Color.Black));
             pixelsC.AddRange(PaintLineBrezenthema(-12, 8, -14, 10, Color.Black));
 
-            label3.Text += $"Всего веремени: {totalTimeC} ms.\n";
+            //label3.Text += $"Всего веремени: {totalTimeC} ms.\n";
+            displayTextBoxC.AppendText($"Всего веремени: {totalTimeC} ms. {Environment.NewLine}");
         }
 
         public static double[] ToPolar(double x, double y)
@@ -799,6 +821,38 @@ namespace KGLaba3
             {
                 timer1.Interval = speed;
             }
+        }
+        private void CalculateAngleBetweenLines(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, String figure, TextBox textBox)
+        {
+            // Направляющие векторы
+            int vx1 = x2 - x1;
+            int vy1 = y2 - y1;
+            int vx2 = x4 - x3;
+            int vy2 = y4 - y3;
+
+            // Скалярное произведение
+            int dotProduct = vx1 * vx2 + vy1 * vy2;
+
+            // Длины векторов
+            double magnitude1 = Math.Sqrt(vx1 * vx1 + vy1 * vy1);
+            double magnitude2 = Math.Sqrt(vx2 * vx2 + vy2 * vy2);
+
+            // Проверка деления на ноль
+            if (magnitude1 == 0 || magnitude2 == 0)
+            {
+                throw new ArgumentException("Одна из линий имеет нулевую длину.");
+            }
+
+            // Косинус угла
+            double cosTheta = dotProduct / (magnitude1 * magnitude2);
+
+            // Угол в радианах
+            double angleRadians = Math.Acos(cosTheta);
+
+            // Угол в градусах
+            double angleDegrees = angleRadians * (180.0 / Math.PI);
+            textBox.AppendText($"Угол {figure} равен {(int)angleDegrees} градусов. {Environment.NewLine}");
+            //return angleDegrees;
         }
     }
 
