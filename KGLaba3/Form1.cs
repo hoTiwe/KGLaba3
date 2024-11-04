@@ -18,7 +18,7 @@ namespace KGLaba3
         List<Pixel> pixelsC = new List<Pixel>();
 
         int scale = 7;
-        int offsetX = 20, offsetY = -10;
+        int offsetX = 20, offsetY = 10;
         int coeffNet = 0;
 
         double totalTimeA = 0;
@@ -49,7 +49,7 @@ namespace KGLaba3
         void paintPixel(Graphics grap, Pixel pixel)
         {
             SolidBrush color = new SolidBrush(pixel.color);
-            grap.FillRectangle(color, (pixel.x + offsetX) * scale, 400 - (pixel.y - offsetY) * scale, 1 * scale - coeffNet, 1 * scale - coeffNet);
+            grap.FillRectangle(color, (pixel.x + offsetX) * scale, 398 - (pixel.y + offsetY) * scale, 1 * scale - coeffNet, 1 * scale - coeffNet);
         }
 
         void clearPictureBox(Graphics grap, PictureBox p)
@@ -59,14 +59,15 @@ namespace KGLaba3
 
         void paintX(Graphics graphics)
         {
-            int x = offsetX * scale;
-            int y = pictureBox1.Height + (offsetY) * scale;
+            int y = 398 - ( (offsetY) * scale - ( offsetY > 0 ? scale >> 1 : -(scale>> 1))  + coeffNet);
+            Console.WriteLine("Y " + y);
             graphics.FillRectangle(new SolidBrush(Color.Black), 0, y, pictureBox1.Width, 2);
-        }
+        } 
 
         void paintY(Graphics graphics)
         {
-            int x = offsetX * scale - scale + 2;
+            int x = offsetX * scale + (scale >> 1) - coeffNet;
+            Console.WriteLine("X " + x);
             graphics.FillRectangle(new SolidBrush(Color.Black), x, 0, 2, pictureBox1.Height);
         }
 
@@ -96,7 +97,7 @@ namespace KGLaba3
                 int.TryParse(textBox3.Text, out int newOffsetY))
             {
                 offsetX = newOffsetX;
-                offsetY = -newOffsetY;
+                offsetY = newOffsetY;
 
                 clearPictureBox(graphicsA, pictureBox1);
                 paintedA = 0;
