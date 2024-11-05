@@ -17,8 +17,12 @@ namespace KGLaba3
         List<Pixel> pixelsB = new List<Pixel>();
         List<Pixel> pixelsC = new List<Pixel>();
 
+        int totalPixelsA = 0;
+        int totalPixelsB = 0;
+        int totalPixelsC = 0;
+
         int scale = 7;
-        int offsetX = 20, offsetY = 10;
+        int offsetX = 20, offsetY = -10;
         int coeffNet = 0;
 
         double totalTimeA = 0;
@@ -71,6 +75,15 @@ namespace KGLaba3
             graphics.FillRectangle(new SolidBrush(Color.Black), x, 0, 2, pictureBox1.Height);
         }
 
+        void paintBorder(Graphics graphics)
+        {
+            Pen borderPen = new Pen(Color.Black, 2);
+
+            // Рисуем границу по размерам PictureBox
+            graphics.DrawRectangle(borderPen, 0, 0, pictureBox1.Width - 1, pictureBox1.Height - 1);
+
+        }
+
         private void buttonSetScale_Click(object sender, EventArgs e)
         {
             if (int.TryParse(textBox1.Text, out int newScale))
@@ -119,10 +132,13 @@ namespace KGLaba3
             {
                 paintX(graphicsA);
                 paintY(graphicsA);
+                paintBorder(graphicsA);
                 paintX(graphicsB);
                 paintY(graphicsB);
+                paintBorder(graphicsB);
                 paintX(graphicsC);
                 paintY(graphicsC);
+                paintBorder(graphicsC);
             }
             else
             {
@@ -164,9 +180,9 @@ namespace KGLaba3
         int CalculateDiff(Bitmap b1, Bitmap b2, bool needChange = false)
         {
             int k = 0;
-            for (int i = 0; i < pictureBox1.Height; i++)
+            for (int i = 0; i < pictureBox1.Width; i++)
             {
-                for (int j = 0; j < pictureBox1.Width; j++)
+                for (int j = 0; j < pictureBox1.Height; j++)
                 {
                     Color c1 = b1.GetPixel(i, j);
                     Color c2 = b2.GetPixel(i, j);
@@ -240,8 +256,7 @@ namespace KGLaba3
             totalTimeA += stopwatch.Elapsed.TotalMilliseconds;
             displayTextBoxA.AppendText($"Прямая ({Math.Round(polar[0], 2)}; {Math.Round(polar[1], 2)}) - ({Math.Round(r2, 2)}; {Math.Round(p, 2)})  ({x1}; {y1}) - ({x2}; {y2}) {Environment.NewLine}");
             displayTextBoxA.AppendText($"{stopwatch.Elapsed.TotalMilliseconds} ms. {Environment.NewLine}");
-
-
+            totalPixelsA += pixels.Count();
             return pixels.ToList();
         }
 
@@ -268,13 +283,11 @@ namespace KGLaba3
             }
 
             stopwatch.Stop();
-            //label2.Text += $"Прямая с координатами ({x1}; {y1}) - ({x2}; {y2}): {stopwatch.Elapsed.TotalMilliseconds} ms.\n";
             displayTextBoxB.AppendText($"Прямая с координатами ({x1}; {y1}) - ({x2}; {y2}): {stopwatch.Elapsed.TotalMilliseconds} ms.{Environment.NewLine}");
             double res = Math.Sqrt(Math.Pow(x2 - x1, 2) + Math.Pow(y2 - y1, 2));
-            //label2.Text += $"Расстояние = {res}\n";
             displayTextBoxB.AppendText($"Расстояние = {res} {Environment.NewLine}");
             totalTimeB += stopwatch.Elapsed.TotalMilliseconds;
-
+            totalPixelsB += pixels.Count();
             return pixels;
         }
 
@@ -316,7 +329,7 @@ namespace KGLaba3
             //label3.Text += $"Прямая с координатами ({x1}; {y1}) - ({x2}; {y2}): {stopwatch.Elapsed.TotalMilliseconds} ms.\n";
             displayTextBoxC.AppendText($"Прямая с координатами ({x1}; {y1}) - ({x2}; {y2}): {stopwatch.Elapsed.TotalMilliseconds} ms.{Environment.NewLine}");
             totalTimeC += stopwatch.Elapsed.TotalMilliseconds;
-
+            totalPixelsC += pixels.Count();
             return pixels;
         }
 
@@ -517,7 +530,7 @@ namespace KGLaba3
             }
 
             List<Pixel> filledPixels = FillA(contourPixels, seedPixel);
-
+            totalPixelsA += filledPixels.Count();
             var allPixels = contourPixels.ToList();
             allPixels.AddRange(filledPixels);
 
@@ -537,7 +550,7 @@ namespace KGLaba3
             }
 
             List<Pixel> filledPixels = FillB(contourPixels, seedPixel);
-
+            totalPixelsB += filledPixels.Count();
             var allPixels = contourPixels.ToList();
             allPixels.AddRange(filledPixels);
 
@@ -556,7 +569,7 @@ namespace KGLaba3
             }
 
             List<Pixel> filledPixels = FillC(contourPixels, seedPixel);
-
+            totalPixelsC += filledPixels.Count();
             var allPixels = contourPixels.ToList();
             allPixels.AddRange(filledPixels);
 
@@ -566,19 +579,23 @@ namespace KGLaba3
         private void button1_Click(object sender, EventArgs e)
         {
             int diff1 = CalculateDiff(bitmapA, bitmapC);
-            label1.Text += $"I = {diff1 / (scale*scale)}\nm = {(double)diff1 / (pictureBox2.Width / scale * pictureBox2.Height / scale)}\n";
-            displayTextBoxA.AppendText($"I = {diff1 / (scale * scale)}{Environment.NewLine}m = {(double)diff1 / (pictureBox2.Width / scale * pictureBox2.Height / scale)}{Environment.NewLine}");
+            //label1.Text += $"I = {diff1 / (scale*scale)}\nm = {(double)diff1 / (pictureBox2.Width / scale * pictureBox2.Height / scale)}\n";
+            displayTextBoxA.AppendText($"I = {diff1 / (scale * scale)}{Environment.NewLine}m = {(double)diff1 / (double)(totalPixelsC * scale * scale)}{Environment.NewLine}");
             int diff2 = CalculateDiff(bitmapB, bitmapC);
-
-            label2.Text += $"I = {diff2 / (scale * scale)}\nm = {(double)diff2 / (pictureBox2.Width / scale * pictureBox2.Height / scale)}\n";
-            displayTextBoxB.AppendText($"I = {diff2 / (scale * scale)}{Environment.NewLine}m = {(double)diff2 / (pictureBox2.Width / scale * pictureBox2.Height / scale)}{Environment.NewLine}");
+            Console.WriteLine($"{totalPixelsA} and {totalPixelsB} and {totalPixelsC}\n");
+            Console.WriteLine($"{diff1} and {diff2}");
+            //label2.Text += $"I = {diff2 / (scale * scale)}\nm = {(double)diff2 / (pictureBox2.Width / scale * pictureBox2.Height / scale)}\n";
+            displayTextBoxB.AppendText($"I = {diff2 / (scale * scale)}{Environment.NewLine}m = {(double)diff2 / (double)(totalPixelsC*scale*scale)}{Environment.NewLine}");
+            Console.WriteLine($"I = {diff1 / (scale * scale)}\nm = {(double)diff1 / (double)(totalPixelsC * scale * scale)}\n");
+            Console.WriteLine($"I = {diff2 / (scale * scale)}\nm = {(double)diff2 / (double)(totalPixelsC * scale * scale)}\n");
             CalculateDiff(bitmapA, bitmapB, true);
         }
 
         private void getPixelsA()
         {
-            pixelsA.AddRange(GetPixelsFigureA(
-               new List<Pixel> {
+            //CalculateAngleBetweenLines(-16, 4, 8, 18, -16 , 4, -16, 204, "между 1 отрезком и ординатой", displayTextBoxA);
+           pixelsA.AddRange(GetPixelsFigureA(
+                new List<Pixel> {
                     new Pixel(-16, 4, Color.Green),
                     new Pixel(-8, 4, Color.Green),
                     new Pixel(-12, 24, Color.Green),
@@ -634,17 +651,12 @@ namespace KGLaba3
                 new Pixel(-1, 2, Color.SaddleBrown), "Прямоугольник (6)"));
 
             pixelsA.AddRange(PaintLineMain(-12, 0, -12, 16, Color.Black));
-
-            pixelsA.AddRange(PaintLineMain(-12, 6, -10, 8, Color.Black));
-            pixelsA.AddRange(PaintLineMain(-12, 6, -14, 8, Color.Black));
-
             CalculateAngleBetweenLines(-12, 6, -10, 8, -12, 6, -14, 8, "между 8 и 9 элементом", displayTextBoxA);
 
             pixelsA.AddRange(PaintLineMain(-12, 8, -10, 10, Color.Black));
             pixelsA.AddRange(PaintLineMain(-12, 8, -14, 10, Color.Black));
 
             CalculateAngleBetweenLines(-12, 8, -10, 10, -12, 8, -14, 10, "между 10 и 11 элементом", displayTextBoxA);
-            //label1.Text += $"Всего веремени: {totalTimeA} ms.\n";
             displayTextBoxA.AppendText($"Всего веремени: {totalTimeA} ms.{Environment.NewLine}");
         }
 
@@ -657,7 +669,8 @@ namespace KGLaba3
                     new Pixel(-12, 24, Color.Green),
                 },
                  new Pixel(-3 * 4, 2 * 4, Color.Green), "Треугольник (1)"));
-            Console.WriteLine("Pixele green B " + pixelsB.Count);
+            CalculateAngleBetweenLines(-16, 4, -16, 204, -16, 4, -16, 204, "между 1 отрезком и ординатой", displayTextBoxB);
+
 
             pixelsB.AddRange(GetPixelsFigureB(
                 new List<Pixel> {
@@ -719,7 +732,7 @@ namespace KGLaba3
             CalculateAngleBetweenLines(-12, 8, -10, 10, -12, 8, -14, 10, "между 10 и 11 элементом", displayTextBoxB);
 
 
-            //label2.Text += $"Всего веремени: {totalTimeB} ms.\n";
+            label2.Text += $"Всего веремени: {totalTimeB} ms.\n";
             displayTextBoxB.AppendText($"Всего веремени: {totalTimeB} ms.{Environment.NewLine}");
         }
 
@@ -789,7 +802,6 @@ namespace KGLaba3
             pixelsC.AddRange(PaintLineBrezenthema(-12, 8, -10, 10, Color.Black));
             pixelsC.AddRange(PaintLineBrezenthema(-12, 8, -14, 10, Color.Black));
 
-            //label3.Text += $"Всего веремени: {totalTimeC} ms.\n";
             displayTextBoxC.AppendText($"Всего веремени: {totalTimeC} ms. {Environment.NewLine}");
         }
 

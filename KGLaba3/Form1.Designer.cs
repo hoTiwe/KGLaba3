@@ -66,7 +66,7 @@
             // pictureBox1
             // 
             pictureBox1.BackColor = SystemColors.HighlightText;
-            pictureBox1.BorderStyle = BorderStyle.FixedSingle;
+            pictureBox1.BorderStyle = BorderStyle.None;
             pictureBox1.Location = new Point(14, 16);
             pictureBox1.Margin = new Padding(3, 4, 3, 4);
             pictureBox1.Name = "pictureBox1";
@@ -77,7 +77,7 @@
             // pictureBox2
             // 
             pictureBox2.BackColor = SystemColors.HighlightText;
-            pictureBox2.BorderStyle = BorderStyle.FixedSingle;
+            pictureBox2.BorderStyle = BorderStyle.None;
             pictureBox2.Location = new Point(510, 16);
             pictureBox2.Margin = new Padding(3, 4, 3, 4);
             pictureBox2.Name = "pictureBox2";
@@ -88,7 +88,7 @@
             // pictureBox3
             // 
             pictureBox3.BackColor = SystemColors.HighlightText;
-            pictureBox3.BorderStyle = BorderStyle.FixedSingle;
+            pictureBox3.BorderStyle = BorderStyle.None;
             pictureBox3.Location = new Point(1010, 16);
             pictureBox3.Margin = new Padding(3, 4, 3, 4);
             pictureBox3.Name = "pictureBox3";
@@ -326,8 +326,6 @@
             Controls.Add(checkBox1);
             Controls.Add(button2);
             Controls.Add(button1);
-            //Controls.Add(label3);
-            //Controls.Add(label1);
             Controls.Add(pictureBox3);
             Controls.Add(pictureBox2);
             Controls.Add(pictureBox1);
