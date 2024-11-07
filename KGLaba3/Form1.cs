@@ -41,6 +41,7 @@ namespace KGLaba3
         int paintedC = 0;
         bool needInit = true;
 
+        Color startColorU;
         public Form1()
         {
             InitializeComponent();
@@ -260,23 +261,34 @@ namespace KGLaba3
             return pixels.ToList();
         }
 
-        List<Pixel> PaintLineCDA(int x1, int y1, int x2, int y2, Color color)
+        List<Pixel> PaintLineCDA(int x1, int y1, int x2, int y2, Color startColor, Color endColor, int resLength)
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
             List<Pixel> pixels = new List<Pixel>();
-
+            Color currentColor;
             int length = Math.Max(Math.Abs(x2 - x1), Math.Abs(y2 - y1));
             double dx = (double)(x2 - x1) / length;
             double dy = (double)(y2 - y1) / length;
             double x = x1;
             double y = y1;
 
+            double deltaR = (endColor.R - startColor.R) / (double)resLength;
+            double deltaG = (endColor.G - startColor.G) / (double)resLength;
+            double deltaB = (endColor.B - startColor.B) / (double)resLength;
+
             int i = 1;
             while (i <= length)
             {
-                pixels.Add(new Pixel((int)Math.Round(x, 0), (int)Math.Round(y, 0), color));
+                int currentR = Math.Clamp((int)(startColor.R + deltaR * i), 0, 255);
+                int currentG = Math.Clamp((int)(startColor.G + deltaG * i), 0, 255);
+                int currentB = Math.Clamp((int)(startColor.B + deltaB * i), 0, 255);
+
+                currentColor = Color.FromArgb(currentR, currentG, currentB);
+                startColorU = currentColor;
+                pixels.Add(new Pixel((int)Math.Round(x, 0), (int)Math.Round(y, 0), currentColor));
+
                 x += dx;
                 y += dy;
                 i++;
@@ -537,16 +549,24 @@ namespace KGLaba3
             return allPixels;
         }
 
-        public List<Pixel> GetPixelsFigureB(List<Pixel> vertices, Pixel seedPixel, String figure)
+        public List<Pixel> GetPixelsFigureB(List<Pixel> vertices, Pixel seedPixel, String figure, Color endColor)
         {
             displayTextBoxB.AppendText($"Фигура  {figure}:{Environment.NewLine}");
             var contourPixels = new HashSet<Pixel>();
-
+            int resLength = 0;
+            startColorU = vertices[0].color;
             for (int i = 0; i < vertices.Count; i++)
             {
                 var start = vertices[i];
                 var end = vertices[(i + 1) % vertices.Count];
-                contourPixels.UnionWith(PaintLineCDA(start.x, start.y, end.x, end.y, start.color));
+                resLength += (int)Math.Sqrt(Math.Pow(end.x - start.x, 2) + Math.Pow(end.y - start.y, 2)); // Общая длина контура
+            }
+        
+            for (int i = 0; i < vertices.Count; i++)
+            {
+                var start = vertices[i];
+                var end = vertices[(i + 1) % vertices.Count];
+                contourPixels.UnionWith(PaintLineCDA(start.x, start.y, end.x, end.y, startColorU, endColor, resLength));
             }
 
             List<Pixel> filledPixels = FillB(contourPixels, seedPixel);
@@ -668,7 +688,7 @@ namespace KGLaba3
                     new Pixel(-8, 4, Color.Green),
                     new Pixel(-12, 24, Color.Green),
                 },
-                 new Pixel(-3 * 4, 2 * 4, Color.Green), "Треугольник (1)"));
+                 new Pixel(-3 * 4, 2 * 4, Color.Green), "Треугольник (1)", Color.Magenta));
             CalculateAngleBetweenLines(-16, 4, -16, 204, -16, 4, -16, 204, "между 1 отрезком и ординатой", displayTextBoxB);
 
 
@@ -679,7 +699,7 @@ namespace KGLaba3
                     new Pixel(2, 6, Color.Orange),
                     new Pixel(2, 0, Color.Orange),
                 },
-                new Pixel(-4, 4, Color.Orange), "Прямоугольник (2)"));
+                new Pixel(-4, 4, Color.Orange), "Прямоугольник (2)", Color.Magenta));
 
             pixelsB.AddRange(GetPixelsFigureB(
                 new List<Pixel> {
@@ -691,7 +711,7 @@ namespace KGLaba3
                 new Pixel(-4, 6, Color.LightGoldenrodYellow),
                 new Pixel(-2, 6, Color.LightGoldenrodYellow),
                 },
-                new Pixel(-4, 8, Color.LightGoldenrodYellow), "Семиугольник (3)"));
+                new Pixel(-4, 8, Color.LightGoldenrodYellow), "Семиугольник (3)", Color.Magenta));
 
             pixelsB.AddRange(GetPixelsFigureB(
                 new List<Pixel> {
@@ -699,7 +719,7 @@ namespace KGLaba3
                 new Pixel(-4, 10, Color.Red),
                 new Pixel(2, 6, Color.Red),
                 },
-                new Pixel(-4, 8, Color.Red), "Треугольник (4)"));
+                new Pixel(-4, 8, Color.Red), "Треугольник (4)", Color.Magenta));
 
             pixelsB.AddRange(GetPixelsFigureB(
                 new List<Pixel> {
@@ -708,7 +728,7 @@ namespace KGLaba3
                 new Pixel(-4, 4, Color.Yellow),
                 new Pixel(-4, 2, Color.Yellow),
                 },
-                new Pixel(-5, 3, Color.Yellow), "Прямоугольник (5)"));
+                new Pixel(-5, 3, Color.Yellow), "Прямоугольник (5)", Color.Magenta));
 
             pixelsB.AddRange(GetPixelsFigureB(
                 new List<Pixel> {
@@ -717,19 +737,19 @@ namespace KGLaba3
                 new Pixel(0, 4, Color.SaddleBrown),
                 new Pixel(0, 0, Color.SaddleBrown),
                 },
-                new Pixel(-1, 2, Color.SaddleBrown), "Прямоугольник(6)"));
+                new Pixel(-1, 2, Color.SaddleBrown), "Прямоугольник(6)", Color.Magenta));
 
-            pixelsB.AddRange(PaintLineCDA(-12, 0, -12, 16, Color.Black));
+            pixelsB.AddRange(PaintLineCDA(-12, 0, -12, 16, Color.Black, Color.Magenta, 4));
 
-            pixelsB.AddRange(PaintLineCDA(-12, 6, -10, 8, Color.Black));
-            pixelsB.AddRange(PaintLineCDA(-12, 6, -14, 8, Color.Black));
+            //pixelsB.AddRange(PaintLineCDA(-12, 6, -10, 8, Color.Black, Color.Magenta));
+            //pixelsB.AddRange(PaintLineCDA(-12, 6, -14, 8, Color.Black, Color.Magenta));
 
-            CalculateAngleBetweenLines(-12, 6, -10, 8, -12, 6, -14, 8, "между 8 и 9 элементом", displayTextBoxB);
+            //CalculateAngleBetweenLines(-12, 6, -10, 8, -12, 6, -14, 8, "между 8 и 9 элементом", displayTextBoxB);
 
-            pixelsB.AddRange(PaintLineCDA(-12, 8, -10, 10, Color.Black));
-            pixelsB.AddRange(PaintLineCDA(-12, 8, -14, 10, Color.Black));
+            //pixelsB.AddRange(PaintLineCDA(-12, 8, -10, 10, Color.Black, Color.Magenta));
+            //pixelsB.AddRange(PaintLineCDA(-12, 8, -14, 10, Color.Black, Color.Magenta));
 
-            CalculateAngleBetweenLines(-12, 8, -10, 10, -12, 8, -14, 10, "между 10 и 11 элементом", displayTextBoxB);
+            //CalculateAngleBetweenLines(-12, 8, -10, 10, -12, 8, -14, 10, "между 10 и 11 элементом", displayTextBoxB);
 
 
             label2.Text += $"Всего веремени: {totalTimeB} ms.\n";
