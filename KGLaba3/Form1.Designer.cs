@@ -58,6 +58,7 @@
             displayTextBoxB = new TextBox();
             scrollPanelC = new Panel();
             displayTextBoxC = new TextBox();
+            button8 = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
@@ -349,11 +350,23 @@
             displayTextBoxC.Size = new Size(394, 488);
             displayTextBoxC.TabIndex = 0;
             // 
+            // button8
+            // 
+            button8.Location = new Point(1302, 632);
+            button8.Margin = new Padding(3, 2, 3, 2);
+            button8.Name = "button8";
+            button8.Size = new Size(109, 27);
+            button8.TabIndex = 24;
+            button8.Text = "Импортировать";
+            button8.UseVisualStyleBackColor = true;
+            button8.Click += loadFromJson;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1435, 791);
+            Controls.Add(button8);
             Controls.Add(button7);
             Controls.Add(button6);
             Controls.Add(button5);
@@ -422,5 +435,6 @@
         private Button button5;
         private Button button6;
         private Button button7;
+        private Button button8;
     }
 }

@@ -9,6 +9,8 @@ using static System.Net.Mime.MediaTypeNames;
 using System.Threading;
 using System.Windows.Forms.VisualStyles;
 using System.Text;
+using System.Text.Json;
+
 
 namespace KGLaba3
 {
@@ -912,6 +914,43 @@ namespace KGLaba3
             writeJson(pictureBox3, pixelsC);
         }
 
+        private void loadFromJson(object sender, EventArgs e)
+        {
+            using (StreamReader r = new StreamReader("../../../output.json"))
+            {
+                string json = r.ReadToEnd();
+                using JsonDocument doc = JsonDocument.Parse(json);
+                JsonElement root = doc.RootElement;
+
+                int width = root.GetProperty("width").GetInt32();
+                int height = root.GetProperty("height").GetInt32();
+
+                JsonElement backgroundColor = root.GetProperty("backgroundColor");
+                int alpha = backgroundColor.GetProperty("aplha").GetInt32();
+                int red = backgroundColor.GetProperty("red").GetInt32();
+                int green = backgroundColor.GetProperty("green").GetInt32();
+                int blue = backgroundColor.GetProperty("blue").GetInt32();
+
+                graphicsA.FillRectangle(new SolidBrush(Color.FromArgb(alpha, red, green, blue)), 0, 0, width, height);
+                scale = root.GetProperty("scale").GetInt32();
+                offsetX = root.GetProperty("offsetX").GetInt32();
+                offsetY = root.GetProperty("offsetY").GetInt32();
+                JsonElement pixels = root.GetProperty("pixels");
+                pixelsA.Clear();
+                foreach (JsonElement pixel in pixels.EnumerateArray())
+                {
+                    int x = pixel.GetProperty("x").GetInt32();
+                    int y = pixel.GetProperty("y").GetInt32();
+                    JsonElement color = pixel.GetProperty("color");
+                    int colorAlpha = color.GetProperty("aplha").GetInt32();
+                    int colorRed = color.GetProperty("red").GetInt32();
+                    int colorGreen = color.GetProperty("green").GetInt32();
+                    int colorBlue = color.GetProperty("blue").GetInt32();
+                    pixelsA.Add(new Pixel(x, y, Color.FromArgb(colorAlpha, colorRed, colorGreen, colorBlue)));
+                }
+                paintedA = 0;
+            }
+        }
     }
 
 
