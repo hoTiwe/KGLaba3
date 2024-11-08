@@ -340,14 +340,14 @@ namespace KGLaba3
             int radius = length* 4 / 6;
             int ost = ((length * 4) % 6)/2; 
 
-            pixels.AddRange(DrawArc(center.x + radius * 2, center.y + radius * 2 + ost, radius, 2));
-            pixels.AddRange(DrawArc(center.x + radius * 2, center.y - radius * 2 - ost, radius, 3));
+            pixels.AddRange(DrawArc(center.x + radius, center.y + radius * 2 + ost, radius, 2));
+            pixels.AddRange(DrawArc(center.x + radius, center.y - radius * 2 - ost, radius, 3));
 
-            pixels.AddRange(BresenhamLine(center.x + radius, center.y + radius, center.x + radius, center.y + radius * 2 + ost));
-            pixels.AddRange(BresenhamLine(center.x + radius, center.y - radius, center.x + radius, center.y - radius * 2 - ost));
+            pixels.AddRange(BresenhamLine(center.x , center.y + radius, center.x, center.y + radius * 2 + ost));
+            pixels.AddRange(BresenhamLine(center.x , center.y - radius, center.x, center.y - radius * 2 - ost));
 
-            pixels.AddRange(DrawArc(center.x, center.y + radius, radius, 4));
-            pixels.AddRange(DrawArc(center.x, center.y - radius, radius, 1));
+            pixels.AddRange(DrawArc(center.x - radius, center.y + radius, radius, 4));
+            pixels.AddRange(DrawArc(center.x - radius, center.y - radius, radius, 1));
 
             return pixels;
         }
@@ -760,7 +760,7 @@ namespace KGLaba3
         private void getPixelsB()
         {
 
-            pixelsB.AddRange(DrawBracket(new Pixel(30,30, Color.Black), 14));
+            pixelsB.AddRange(DrawBracket(new Pixel(0,0, Color.Black), 14));
 
             label2.Text += $"Всего веремени: {totalTimeB} ms.\n";
             displayTextBoxB.AppendText($"Всего веремени: {totalTimeB} ms.{Environment.NewLine}");
