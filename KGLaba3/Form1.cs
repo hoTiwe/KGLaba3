@@ -656,6 +656,9 @@ namespace KGLaba3
             pixelsA.AddRange(PaintLineMain(-12, 8, -10, 10, Color.Black));
             pixelsA.AddRange(PaintLineMain(-12, 8, -14, 10, Color.Black));
 
+            pixelsA.AddRange(PaintLineMain(-12, 6, -10, 8, Color.Black));
+            pixelsA.AddRange(PaintLineMain(-12, 6, -14, 8, Color.Black));
+
             CalculateAngleBetweenLines(-12, 8, -10, 10, -12, 8, -14, 10, "между 10 и 11 элементом", displayTextBoxA);
             displayTextBoxA.AppendText($"Всего веремени: {totalTimeA} ms.{Environment.NewLine}");
         }
