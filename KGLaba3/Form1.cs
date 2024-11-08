@@ -337,16 +337,17 @@ namespace KGLaba3
         public List<Pixel> DrawBracket(Pixel center, int length)
         {
             List<Pixel> pixels = new List<Pixel>();
-            int radius = length* 2 / 3;
+            int radius = length* 4 / 6;
+            int ost = ((length * 4) % 6)/2; 
 
-            pixels.AddRange(DrawArc(center.x + radius * 2, center.y + radius * 2, radius, 2));
-            pixels.AddRange(DrawArc(center.x + radius * 2, center.y - radius * 2, radius, 3));
+            pixels.AddRange(DrawArc(center.x + radius * 2, center.y + radius * 2 + ost, radius, 2));
+            pixels.AddRange(DrawArc(center.x + radius * 2, center.y - radius * 2 - ost, radius, 3));
+
+            pixels.AddRange(BresenhamLine(center.x + radius, center.y + radius, center.x + radius, center.y + radius * 2 + ost));
+            pixels.AddRange(BresenhamLine(center.x + radius, center.y - radius, center.x + radius, center.y - radius * 2 - ost));
 
             pixels.AddRange(DrawArc(center.x, center.y + radius, radius, 4));
             pixels.AddRange(DrawArc(center.x, center.y - radius, radius, 1));
-
-            pixels.AddRange(BresenhamLine(center.x + radius, center.y + radius, center.x + radius, center.y + radius * 2));
-            pixels.AddRange(BresenhamLine(center.x + radius, center.y - radius, center.x + radius, center.y - radius * 2));
 
             return pixels;
         }
@@ -759,7 +760,7 @@ namespace KGLaba3
         private void getPixelsB()
         {
 
-            pixelsB.AddRange(DrawBracket(new Pixel(30,30, Color.Black), 6));
+            pixelsB.AddRange(DrawBracket(new Pixel(30,30, Color.Black), 14));
 
             label2.Text += $"Всего веремени: {totalTimeB} ms.\n";
             displayTextBoxB.AppendText($"Всего веремени: {totalTimeB} ms.{Environment.NewLine}");
