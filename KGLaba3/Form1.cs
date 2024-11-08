@@ -45,8 +45,10 @@ namespace KGLaba3
         {
             InitializeComponent();
             getPixelsA();
-            getPixelsB();
+            //getPixelsB();
             getPixelsC();
+            SaveToFile();
+            ReadPicture();
             timer1.Start();
         }
 
@@ -591,6 +593,167 @@ namespace KGLaba3
             CalculateDiff(bitmapA, bitmapB, true);
         }
 
+        private void SaveToFile()
+        {
+            List<List<Pixel>> allFigures = new List<List<Pixel>>
+            {
+                new List<Pixel>
+                {
+                    new Pixel(-16, 4, Color.Green),
+                    new Pixel(-8, 4, Color.Green),
+                    new Pixel(-12, 24, Color.Green),
+                    new Pixel(-3 * 4, 2 * 4, Color.Green),
+                },
+                new List<Pixel> {
+                    new Pixel(-10, 0, Color.Orange),
+                    new Pixel(-10, 6, Color.Orange),
+                    new Pixel(2, 6, Color.Orange),
+                    new Pixel(2, 0, Color.Orange),
+                    new Pixel(-4, 4, Color.Orange),
+                },
+                new List<Pixel> {
+                    new Pixel(0, 10, Color.LightGoldenrodYellow),
+                    new Pixel(-2, 12, Color.LightGoldenrodYellow),
+                    new Pixel(-4, 12, Color.LightGoldenrodYellow),
+                    new Pixel(-6, 10, Color.LightGoldenrodYellow),
+                    new Pixel(-6, 8, Color.LightGoldenrodYellow),
+                    new Pixel(-4, 6, Color.LightGoldenrodYellow),
+                    new Pixel(-2, 6, Color.LightGoldenrodYellow),
+                    new Pixel(-4, 8, Color.LightGoldenrodYellow),
+                },
+                new List<Pixel> {
+                    new Pixel(-10, 6, Color.Red),
+                    new Pixel(-4, 10, Color.Red),
+                    new Pixel(2, 6, Color.Red),
+                    new Pixel(-4, 8, Color.Red),
+                },
+                new List<Pixel> {
+                    new Pixel(-6, 2, Color.Yellow),
+                    new Pixel(-6, 4, Color.Yellow),
+                    new Pixel(-4, 4, Color.Yellow),
+                    new Pixel(-4, 2, Color.Yellow),
+                    new Pixel(-5, 3, Color.Yellow),
+                },
+                new List<Pixel> {
+                    new Pixel(-2, 0, Color.SaddleBrown),
+                    new Pixel(-2, 4, Color.SaddleBrown),
+                    new Pixel(0, 4, Color.SaddleBrown),
+                    new Pixel(0, 0, Color.SaddleBrown),
+                    new Pixel(-1, 2, Color.SaddleBrown),
+                },
+
+                new List<Pixel>
+                {
+                    new Pixel(-12, 0, Color.Black),
+                    new Pixel(-12, 16, Color.Black),
+                },
+
+                new List<Pixel>
+                {
+                    new Pixel(-12, 6, Color.Black),
+                    new Pixel(-10, 8, Color.Black),
+                },
+
+                new List<Pixel>
+                {
+                    new Pixel(-12, 6, Color.Black),
+                    new Pixel(-14, 8, Color.Black),
+                },
+
+                new List<Pixel>
+                {
+                    new Pixel(-12, 8, Color.Black),
+                    new Pixel(-10, 10, Color.Black),
+                },
+
+                new List<Pixel>
+                {
+                    new Pixel(-12, 8, Color.Black),
+                    new Pixel(-14, 10, Color.Black),
+                },
+
+                
+
+            };
+            int amountFigures = allFigures.Count();
+
+            using (FileStream fileStream = new FileStream(@"../../../aaa.aaa", FileMode.Create))
+            {
+                fileStream.WriteByte((byte)(amountFigures % 256));
+                for(int i=0;i< amountFigures; i++)
+                {
+                    List <Pixel> temp = allFigures[i];
+                    fileStream.WriteByte((byte)temp.Count());
+                    int argb = temp[0].color.ToArgb();
+                    fileStream.WriteByte((byte)((argb >> 24) & 0xFF)); // Альфа-канал
+                    fileStream.WriteByte((byte)((argb >> 16) & 0xFF)); // Красный канал
+                    fileStream.WriteByte((byte)((argb >> 8) & 0xFF));  // Зелёный канал
+                    fileStream.WriteByte((byte)(argb & 0xFF));
+                    for (int j = 0; j< temp.Count(); j++)
+                    {
+                        fileStream.WriteByte((byte)(temp[j].x + 128));
+                        fileStream.WriteByte((byte)(temp[j].y + 128));
+                    }
+                }
+
+            }
+        }
+
+        private void ReadPicture()
+        {
+            string filePath = @"../../../aaa.aaa";
+
+            using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
+            {
+                byte res;
+                res = (byte)fileStream.ReadByte();
+                int figureCount = res;
+                List<Pixel> resFigure = new List<Pixel>();
+                for (int i=0;i<figureCount; i++)
+                {
+                    int countPixel = fileStream.ReadByte();
+                    if (countPixel > 3)
+                    {
+                        Console.WriteLine(countPixel);
+                        int a = fileStream.ReadByte();
+                        int r = fileStream.ReadByte();
+                        int g = fileStream.ReadByte();
+                        int b = fileStream.ReadByte();
+                        Color color = Color.FromArgb(a, r, g, b);
+                        for (int j = 0; j < countPixel - 1; j++)
+                        {
+                            int x = fileStream.ReadByte() - 128;
+                            int y = fileStream.ReadByte() - 128;
+                            resFigure.Add(new Pixel(x, y, color));
+                            Console.WriteLine($"{x} {y} {color}\n");
+                        }
+                        int xmiddle = fileStream.ReadByte() - 128;
+                        int ymiddle = fileStream.ReadByte() - 128;
+                        Pixel mid = new Pixel(xmiddle, ymiddle, color);
+                        Console.WriteLine($"{xmiddle} {ymiddle} {color}\n");
+                        pixelsB.AddRange(GetPixelsFigureB(resFigure, mid, "Фигура"));
+                    } else
+                    {
+                        Console.WriteLine(countPixel);
+                        int a = fileStream.ReadByte();
+                        int r = fileStream.ReadByte();
+                        int g = fileStream.ReadByte();
+                        int b = fileStream.ReadByte();
+                        Color color = Color.FromArgb(a, r, g, b);
+                        for (int j = 0; j < countPixel; j++)
+                        {
+                            int x = fileStream.ReadByte() - 128;
+                            int y = fileStream.ReadByte() - 128;
+                            resFigure.Add(new Pixel(x, y, color));
+                            Console.WriteLine($"{x} {y} {color}\n");
+                        }
+                        pixelsB.AddRange(PaintLineCDA(resFigure[0].x, resFigure[0].y, resFigure[1].x, resFigure[1].y, color));
+                    }
+                    resFigure.Clear();
+                }
+            }
+        }
+        
         private void getPixelsA()
         {
             //CalculateAngleBetweenLines(-16, 4, 8, 18, -16 , 4, -16, 204, "между 1 отрезком и ординатой", displayTextBoxA);
@@ -655,6 +818,9 @@ namespace KGLaba3
 
             pixelsA.AddRange(PaintLineMain(-12, 8, -10, 10, Color.Black));
             pixelsA.AddRange(PaintLineMain(-12, 8, -14, 10, Color.Black));
+
+            pixelsA.AddRange(PaintLineMain(-12, 6, -10, 8, Color.Black));
+            pixelsA.AddRange(PaintLineMain(-12, 6, -14, 8, Color.Black));
 
             CalculateAngleBetweenLines(-12, 8, -10, 10, -12, 8, -14, 10, "между 10 и 11 элементом", displayTextBoxA);
             displayTextBoxA.AppendText($"Всего веремени: {totalTimeA} ms.{Environment.NewLine}");
