@@ -16,12 +16,13 @@ namespace KGLaba3
         List<Pixel> pixelsA = new List<Pixel>();
         List<Pixel> pixelsB = new List<Pixel>();
         List<Pixel> pixelsC = new List<Pixel>();
+        List<Point> pointsB = new List<Point>();
 
         int totalPixelsA = 0;
         int totalPixelsB = 0;
         int totalPixelsC = 0;
 
-        int scale = 7;
+        int scale = 3;
         int offsetX = 20, offsetY = -10;
         int coeffNet = 0;
 
@@ -330,6 +331,101 @@ namespace KGLaba3
             displayTextBoxC.AppendText($"Прямая с координатами ({x1}; {y1}) - ({x2}; {y2}): {stopwatch.Elapsed.TotalMilliseconds} ms.{Environment.NewLine}");
             totalTimeC += stopwatch.Elapsed.TotalMilliseconds;
             totalPixelsC += pixels.Count();
+            return pixels;
+        }
+
+        public List<Pixel> DrawBracket(Pixel center, int length)
+        {
+            List<Pixel> pixels = new List<Pixel>();
+            int radius = length* 2 / 3;
+
+            pixels.AddRange(DrawArc(center.x + radius * 2, center.y + radius * 2, radius, 2));
+            pixels.AddRange(DrawArc(center.x + radius * 2, center.y - radius * 2, radius, 3));
+
+            pixels.AddRange(DrawArc(center.x, center.y + radius, radius, 4));
+            pixels.AddRange(DrawArc(center.x, center.y - radius, radius, 1));
+
+            pixels.AddRange(BresenhamLine(center.x + radius, center.y + radius, center.x + radius, center.y + radius * 2));
+            pixels.AddRange(BresenhamLine(center.x + radius, center.y - radius, center.x + radius, center.y - radius * 2));
+
+            return pixels;
+        }
+
+        private List<Pixel> BresenhamLine(int x1, int y1, int x2, int y2)
+        {
+            List<Pixel> pixels = new List<Pixel>();
+
+            int dx = Math.Abs(x2 - x1);
+            int dy = Math.Abs(y2 - y1);
+            int sx = x1 < x2 ? 1 : -1;
+            int sy = y1 < y2 ? 1 : -1;
+            int err = dx - dy;
+
+            while (true)
+            {
+                pixels.Add(new Pixel(x1, y1, Color.Black));
+                if (x1 == x2 && y1 == y2) break;
+                int e2 = 2 * err;
+                if (e2 > -dy)
+                {
+                    err -= dy;
+                    x1 += sx;
+                }
+                if (e2 < dx)
+                {
+                    err += dx;
+                    y1 += sy;
+                }
+            }
+
+            return pixels;
+        }
+
+        private List<Pixel> DrawArc(int centerX, int centerY, int radius, int quarter)
+        {
+            List<Pixel> pixels = new List<Pixel>();
+
+            int x = 0;
+            int y = radius;
+            int d = 3 - 2 * radius;
+
+            while (x <= y)
+            {
+                switch (quarter)
+                {
+                    case 1: // Верхняя правая четверть
+                        pixels.Add(new Pixel(centerX + x, centerY + y, Color.Black));
+                        pixels.Add(new Pixel(centerX + y, centerY + x, Color.Black));
+                        break;
+
+                    case 2: // Верхняя левая четверть
+                        pixels.Add(new Pixel(centerX - x, centerY + y, Color.Black));
+                        pixels.Add(new Pixel(centerX - y, centerY + x, Color.Black));
+                        break;
+
+                    case 3: // Нижняя правая четверть
+                        pixels.Add(new Pixel(centerX - x, centerY - y, Color.Black));
+                        pixels.Add(new Pixel(centerX - y, centerY - x, Color.Black));
+                        break;
+
+                    case 4: // Нижняя левая четверть
+                        pixels.Add(new Pixel(centerX + x, centerY - y, Color.Black));
+                        pixels.Add(new Pixel(centerX + y, centerY - x, Color.Black));
+                        break;
+                }
+
+                x++;
+
+                if (d <= 0)
+                {
+                    d = d + 4 * x + 6;
+                }
+                else
+                {
+                    d = d + 4 * (x - y) + 10;
+                    y--;
+                }
+            }
             return pixels;
         }
 
@@ -662,75 +758,8 @@ namespace KGLaba3
 
         private void getPixelsB()
         {
-            pixelsB.AddRange(GetPixelsFigureB(
-                new List<Pixel> {
-                    new Pixel(-16, 4, Color.Green),
-                    new Pixel(-8, 4, Color.Green),
-                    new Pixel(-12, 24, Color.Green),
-                },
-                 new Pixel(-3 * 4, 2 * 4, Color.Green), "Треугольник (1)"));
-            CalculateAngleBetweenLines(-16, 4, -16, 204, -16, 4, -16, 204, "между 1 отрезком и ординатой", displayTextBoxB);
 
-
-            pixelsB.AddRange(GetPixelsFigureB(
-                new List<Pixel> {
-                    new Pixel(-10, 0, Color.Orange),
-                    new Pixel(-10, 6, Color.Orange),
-                    new Pixel(2, 6, Color.Orange),
-                    new Pixel(2, 0, Color.Orange),
-                },
-                new Pixel(-4, 4, Color.Orange), "Прямоугольник (2)"));
-
-            pixelsB.AddRange(GetPixelsFigureB(
-                new List<Pixel> {
-                new Pixel(0, 10, Color.LightGoldenrodYellow),
-                new Pixel(-2, 12, Color.LightGoldenrodYellow),
-                new Pixel(-4, 12, Color.LightGoldenrodYellow),
-                new Pixel(-6, 10, Color.LightGoldenrodYellow),
-                new Pixel(-6, 8, Color.LightGoldenrodYellow),
-                new Pixel(-4, 6, Color.LightGoldenrodYellow),
-                new Pixel(-2, 6, Color.LightGoldenrodYellow),
-                },
-                new Pixel(-4, 8, Color.LightGoldenrodYellow), "Семиугольник (3)"));
-
-            pixelsB.AddRange(GetPixelsFigureB(
-                new List<Pixel> {
-                new Pixel(-10, 6, Color.Red),
-                new Pixel(-4, 10, Color.Red),
-                new Pixel(2, 6, Color.Red),
-                },
-                new Pixel(-4, 8, Color.Red), "Треугольник (4)"));
-
-            pixelsB.AddRange(GetPixelsFigureB(
-                new List<Pixel> {
-                new Pixel(-6, 2, Color.Yellow),
-                new Pixel(-6, 4, Color.Yellow),
-                new Pixel(-4, 4, Color.Yellow),
-                new Pixel(-4, 2, Color.Yellow),
-                },
-                new Pixel(-5, 3, Color.Yellow), "Прямоугольник (5)"));
-
-            pixelsB.AddRange(GetPixelsFigureB(
-                new List<Pixel> {
-                new Pixel(-2, 0, Color.SaddleBrown),
-                new Pixel(-2, 4, Color.SaddleBrown),
-                new Pixel(0, 4, Color.SaddleBrown),
-                new Pixel(0, 0, Color.SaddleBrown),
-                },
-                new Pixel(-1, 2, Color.SaddleBrown), "Прямоугольник(6)"));
-
-            pixelsB.AddRange(PaintLineCDA(-12, 0, -12, 16, Color.Black));
-
-            pixelsB.AddRange(PaintLineCDA(-12, 6, -10, 8, Color.Black));
-            pixelsB.AddRange(PaintLineCDA(-12, 6, -14, 8, Color.Black));
-
-            CalculateAngleBetweenLines(-12, 6, -10, 8, -12, 6, -14, 8, "между 8 и 9 элементом", displayTextBoxB);
-
-            pixelsB.AddRange(PaintLineCDA(-12, 8, -10, 10, Color.Black));
-            pixelsB.AddRange(PaintLineCDA(-12, 8, -14, 10, Color.Black));
-
-            CalculateAngleBetweenLines(-12, 8, -10, 10, -12, 8, -14, 10, "между 10 и 11 элементом", displayTextBoxB);
-
+            pixelsB.AddRange(DrawBracket(new Pixel(30,30, Color.Black), 6));
 
             label2.Text += $"Всего веремени: {totalTimeB} ms.\n";
             displayTextBoxB.AppendText($"Всего веремени: {totalTimeB} ms.{Environment.NewLine}");
